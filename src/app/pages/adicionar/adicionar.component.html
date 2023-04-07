@@ -1,0 +1,31 @@
+<div class="flex flex-col">
+  <div class="flex h-60 items-start">
+    <img
+      src="../../../assets/boxWithBooks.png"
+      alt="cat on a bookshelf"
+      class="h-full"
+    />
+    <div class="flex h-full w-full flex-col gap-5">
+      <h1 class="text-5xl font-extrabold text-highlight">
+        Adicione um novo {{ item || "item" }}!
+      </h1>
+      <form class="flex gap-2">
+        <label class="text-2xl text-secondary" for="item"
+          >Selecione o tipo do item:</label
+        >
+        <select
+          id="item"
+          formControlName="select1"
+          (change)="onItemSelect($event)"
+          value=""
+          class="h-fit w-1/2 border-b-2 border-highlight bg-main px-4 py-2 text-xl text-secondary"
+        >
+          <option value="">nenhum item selecionado</option>
+          <option *ngFor="let type of itemTypes" [value]="type">
+            {{ type }}
+          </option>
+        </select>
+      </form>
+    </div>
+  </div>
+</div>

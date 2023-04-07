@@ -1,0 +1,54 @@
+<div
+  [ngClass]="isOpen ? 'h-screen min-h-1 w-60' : 'h-fit w-40 '"
+  class="fixed mx-4 flex flex-col items-center justify-between border-2 border-t-0 border-stroke bg-card shadow-md shadow-detail"
+>
+  <div
+    *ngIf="isOpen"
+    class="50 flex h-fit w-10/12 flex-col items-center justify-between border-b-2 border-b-detail px-2 pt-6"
+  >
+    <div class="flex h-1/2 items-center">
+      <img
+        src="../../../assets/logo.png"
+        alt="person reading a book"
+        class="w-full"
+      />
+    </div>
+    <div class="h-1/3">
+      <h1
+        class="flex flex-col items-end justify-end text-center font-logo text-3xl text-highlight"
+      >
+        <a routerLink="/"> A Biblioteca </a>
+      </h1>
+    </div>
+  </div>
+  <nav class="h-96 w-full" *ngIf="isOpen">
+    <ul
+      class="flex h-full flex-col items-start justify-around px-6 py-2 text-lg font-semibold text-highlight"
+    >
+      <li class="w-full cursor-pointer hover:text-secondary">Livros</li>
+      <li class="w-full cursor-pointer hover:text-secondary">Filmes</li>
+      <li class="w-full cursor-pointer hover:text-secondary">Músicas</li>
+      <li
+        class="w-full cursor-pointer hover:text-secondary"
+        routerLink="/adicionar"
+      >
+        Adicionar
+      </li>
+    </ul>
+  </nav>
+  <div
+    [ngClass]="
+      isOpen ? 'h-12 w-10/12 border-t-2 border-t-detail' : 'h-6 w-11/12'
+    "
+    class="flex items-center justify-around text-detail"
+    (click)="toggleNav()"
+  >
+    <p class="font-logo text-xl text-highlight" *ngIf="!isOpen">A Biblioteca</p>
+    <ng-icon
+      class="cursor-pointer text-xl text-secondary hover:text-highlight"
+      [name]="
+        isOpen ? 'heroChevronDoubleUpSolid' : 'heroChevronDoubleDownSolid'
+      "
+    ></ng-icon>
+  </div>
+</div>
