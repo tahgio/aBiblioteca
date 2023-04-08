@@ -1,5 +1,5 @@
 <div class="flex flex-col">
-  <div class="flex h-60 items-start">
+  <div class="flex h-fit items-start">
     <img
       src="../../../assets/boxWithBooks.png"
       alt="cat on a bookshelf"
@@ -7,25 +7,154 @@
     />
     <div class="flex h-full w-full flex-col gap-5">
       <h1 class="text-5xl font-extrabold text-highlight">
-        Adicione um novo {{ item || "item" }}!
+        Adicione um novo {{ item }}!
       </h1>
-      <form class="flex gap-2">
+      <p class="text-base text-detail">
+        Adicione um novo {{ item }} para a biblioteca. Para isso, preencha os
+        campos abaixo com as respectivas informações.
+      </p>
+      <div class="flex gap-2">
         <label class="text-2xl text-secondary" for="item"
           >Selecione o tipo do item:</label
         >
         <select
           id="item"
-          formControlName="select1"
           (change)="onItemSelect($event)"
-          value=""
           class="h-fit w-1/2 border-b-2 border-highlight bg-main px-4 py-2 text-xl text-secondary"
         >
-          <option value="">nenhum item selecionado</option>
+          <option value="item">nenhum item selecionado</option>
           <option *ngFor="let type of itemTypes" [value]="type">
             {{ type }}
           </option>
         </select>
-      </form>
+      </div>
     </div>
+  </div>
+  <div>{{ mainForm.value | json }}</div>
+  <div class="flex h-fit w-full flex-col rounded bg-card p-5">
+    <form
+      [formGroup]="mainForm"
+      class="flex flex-col items-center justify-center gap-2"
+    >
+      <div class="flex flex-col">
+        <h2 class="text-3xl font-extrabold text-highlight">
+          Informações Gerais
+        </h2>
+        <div class="m-1 flex flex-wrap justify-start gap-6">
+          <div class="m-1 flex items-end gap-4">
+            <label class="text-2xl text-secondary" for="title">Título:</label>
+            <input
+              id="title"
+              formControlName="title"
+              type="text"
+              class="h-fit w-80 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+            />
+          </div>
+          <div class="m-1 flex items-end gap-4">
+            <label class="text-2xl text-secondary" for="author">Autor:</label>
+            <input
+              id="author"
+              formControlName="author"
+              type="text"
+              class="h-fit w-80 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+            />
+          </div>
+          <div class="m-1 flex items-end gap-4">
+            <label class="text-2xl text-secondary" for="genre">Gênero:</label>
+            <input
+              id="genre"
+              formControlName="genre"
+              type="text"
+              class="h-fit w-40 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+            />
+          </div>
+          <div class="m-1 flex items-end gap-4">
+            <label class="text-2xl text-secondary" for="year">Ano:</label>
+            <input
+              id="year"
+              formControlName="year"
+              type="text"
+              class="h-fit w-40 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+            />
+          </div>
+          <div class="m-1 flex items-end gap-4">
+            <label class="text-2xl text-secondary" for="pages">Páginas:</label>
+            <input
+              id="pages"
+              formControlName="pages"
+              type="text"
+              class="h-fit w-40 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="h-6 w-full border-b-2 border-dashed border-b-highlight"></div>
+      <div class="flex flex-col">
+        <h2 class="text-3xl font-extrabold text-highlight">Detalhes</h2>
+        <div class="m-1 flex flex-wrap justify-start gap-6">
+          <div class="m-1 flex items-end gap-4">
+            <label class="text-2xl text-secondary" for="cover"
+              >Capa: (url)</label
+            >
+            <input
+              id="cover"
+              formControlName="cover"
+              type="text"
+              class="h-fit w-128 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+            />
+          </div>
+          <div class="m-1 flex items-end gap-4">
+            <label class="text-2xl text-secondary" for="rating">Nota</label>
+            <div formControlName="rating" class="flex gap-1">
+              <span
+                *ngFor="let i of [1, 2, 3, 4, 5]"
+                class="inline-block cursor-pointer text-2xl"
+                (click)="mainForm.get('rating')?.setValue(i)"
+              >
+                <ng-icon
+                  [name]="
+                    i <= mainForm.get('rating')?.value
+                      ? 'heroStarSolid'
+                      : 'heroStar'
+                  "
+                  color="gold"
+                ></ng-icon>
+              </span>
+            </div>
+          </div>
+          <div class="m-1 flex items-end gap-4">
+            <label class="text-2xl text-secondary" for="genre">Status:</label>
+            <select
+              id="status"
+              formControlName="status"
+              value=""
+              class="h-fit w-96 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary"
+            >
+              <option *ngFor="let status of statusList" [value]="status">
+                {{ status }}
+              </option>
+            </select>
+          </div>
+          <div formGroupName="quotesForm">
+            <div formArrayName="quotes">
+              <div
+                *ngFor="let quote of quotes.controls; let i = index"
+                [formGroupName]="i"
+              >
+                <input
+                  type="text"
+                  formControlName="quote"
+                  placeholder="Citação"
+                />
+                <input type="text" formControlName="page" placeholder="Page" />
+              </div>
+            </div>
+            <button type="button" (click)="addQuote()">
+              Adicione uma citação
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 </div>
