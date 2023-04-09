@@ -15,6 +15,7 @@ import {
 import { heroStar } from '@ng-icons/heroicons/outline';
 
 import { AdicionarComponent } from './pages/adicionar/adicionar.component';
+import { StarRatingComponent } from './elements/star-rating/star-rating.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AdicionarComponent } from './pages/adicionar/adicionar.component';
     NavbarComponent,
     HomeComponent,
     AdicionarComponent,
+    StarRatingComponent,
   ],
   imports: [
     BrowserModule,
