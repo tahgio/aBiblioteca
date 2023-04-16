@@ -35,6 +35,7 @@ export class AdicionarComponent implements OnInit {
       cover: [''],
       year: [''],
       pages: [''],
+      collection: [''],
       status: [''],
       rating: [1, [Validators.min(1), Validators.max(5)]],
       quotesForm: this.fb.group({
@@ -59,5 +60,12 @@ export class AdicionarComponent implements OnInit {
         page: [0],
       })
     );
+  }
+  rmvQuote(index: number) {
+    this.quotes.removeAt(index);
+  }
+
+  submitForm(value: object): void {
+    console.log(value);
   }
 }
