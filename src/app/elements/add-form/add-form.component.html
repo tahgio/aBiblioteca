@@ -1,0 +1,664 @@
+<div class="flex h-fit w-full flex-col rounded bg-card p-5">
+  <ng-container *ngIf="itemType !== 'item'; else noChoice">
+    <form
+      [formGroup]="form"
+      class="flex flex-col items-center justify-center gap-2"
+      #f="ngForm"
+      (submit)="submitForm(f.value)"
+      [ngSwitch]="itemType"
+    >
+      <!-- ############ -->
+      <!-- ### Case  ## -->
+      <!-- ### Livro ## -->
+      <!-- ############ -->
+      <ng-container *ngSwitchCase="'Livro'">
+        <!-- Info -->
+        <div class="flex w-full flex-col">
+          <h2 class="text-3xl font-extrabold text-highlight">
+            Informações Gerais
+          </h2>
+          <div class="m-1 flex flex-col justify-start gap-6">
+            <!-- Group 1 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="title"
+                  >Título:</label
+                >
+                <input
+                  id="title"
+                  formControlName="title"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <!-- Group 2 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="author"
+                  >Autor:</label
+                >
+                <input
+                  id="author"
+                  formControlName="author"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <!-- Group 3 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex shrink grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="genre"
+                  >Gênero:</label
+                >
+                <input
+                  id="genre"
+                  formControlName="genre"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+              <div class="m-1 flex grow-0 items-end gap-4">
+                <label class="text-2xl text-secondary" for="year">Ano:</label>
+                <input
+                  id="year"
+                  formControlName="year"
+                  type="text"
+                  class="h-fit w-28 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+              <div class="m-1 flex grow-0 items-end gap-4">
+                <label class="text-2xl text-secondary" for="pages"
+                  >Páginas:</label
+                >
+                <input
+                  id="pages"
+                  formControlName="pages"
+                  type="text"
+                  class="h-fit w-24 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Divider -->
+        <div
+          class="h-6 w-full border-b-2 border-dashed border-b-highlight"
+        ></div>
+        <!-- Details -->
+        <div class="flex flex-col">
+          <h2 class="text-3xl font-extrabold text-highlight">Detalhes</h2>
+          <div class="m-1 flex flex-wrap justify-start gap-6">
+            <!-- Group 1 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="min-w-max text-2xl text-secondary" for="cover"
+                  >Capa: (url)</label
+                >
+                <input
+                  id="cover"
+                  formControlName="cover"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+            <!-- Group 2 -->
+            <div class="flex w-full items-end gap-2">
+              <div class="relative m-1 flex grow items-end gap-4">
+                <label class="min-w-max text-2xl text-secondary">Tags:</label>
+                <input
+                  id="tags"
+                  type="text"
+                  [(ngModel)]="tagInput"
+                  [ngModelOptions]="{ standalone: true }"
+                  (keydown.enter)="addTag($event)"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+                <button
+                  class="absolute right-0 top-2 rounded px-1 py-0.5 text-detail"
+                  *ngIf="tagInput.length > 0"
+                  (click)="addTag($event)"
+                >
+                  <ng-icon class="text-2xl" name="heroPlusCircleSolid">
+                  </ng-icon>
+                </button>
+              </div>
+              <div class="m-1 flex grow-0 items-end gap-4">
+                <label class="text-2xl text-secondary" for="status">
+                  Status:
+                </label>
+                <select
+                  id="status"
+                  formControlName="status"
+                  value=""
+                  class="h-fit w-40 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary"
+                >
+                  <option *ngFor="let status of statusList" [value]="status">
+                    {{ status }}
+                  </option>
+                </select>
+              </div>
+              <app-star-rating [mainForm]="form"></app-star-rating>
+            </div>
+            <div class="flex w-full gap-2">
+              <div
+                class="flex items-center gap-2 rounded bg-detail px-2 py-0.5 text-card"
+                *ngFor="let tag of tags"
+              >
+                {{ tag }}
+                <ng-icon
+                  class="cursor-pointer"
+                  (click)="popTag(tag)"
+                  name="heroXCircleSolid"
+                ></ng-icon>
+              </div>
+              <div *ngIf="tags.length === 0">
+                <h4 class="text-slate-400">Adicione uma tag</h4>
+              </div>
+            </div>
+            <!-- Group Array -->
+            <div class="flex w-full flex-col gap-2" formGroupName="quotesForm">
+              <div class="flex w-full flex-col gap-2" formArrayName="quotes">
+                <div
+                  class="flex w-full flex-col gap-2 rounded bg-main px-5 py-3"
+                  *ngFor="let quote of quotes.controls; let i = index"
+                  [formGroupName]="i"
+                >
+                  <div class="flex flex-col gap-2">
+                    <label
+                      class="text-xl font-bold text-highlight"
+                      [for]="'quote_' + i"
+                    >
+                      Citação {{ i + 1 }}
+                    </label>
+                    <textarea
+                      class="h-40 flex-grow resize-none overflow-x-hidden bg-main p-2 text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                      [id]="'quote_' + i"
+                      formControlName="quote"
+                      placeholder="Sua citação aqui"
+                    ></textarea>
+                  </div>
+                  <div class="flex justify-between">
+                    <div class="flex items-center gap-2">
+                      <label
+                        class="text-xl font-bold text-highlight"
+                        [for]="'page_' + i"
+                        >página:
+                      </label>
+                      <input
+                        class="h-fit w-24 bg-main px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                        type="number"
+                        [id]="'page_' + i"
+                        formControlName="page"
+                      />
+                    </div>
+                    <div class="flex items-center">
+                      <button
+                        class="rounded border-2 border-secondary px-2 py-px font-bold text-secondary"
+                        type="button"
+                        (click)="rmvQuote(i)"
+                      >
+                        Remover
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="w-fit rounded border-2 border-highlight bg-card px-2 py-1 text-highlight hover:border-secondary hover:text-secondary"
+                type="button"
+                (click)="addQuote()"
+              >
+                Adicione uma citação
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <!-- ############ -->
+      <!-- ### Case  ## -->
+      <!-- ### Filme ## -->
+      <!-- ############ -->
+      <ng-container *ngSwitchCase="'Filme'">
+        <!-- Info -->
+        <div class="flex w-full flex-col">
+          <h2 class="text-3xl font-extrabold text-highlight">
+            Informações Gerais
+          </h2>
+          <div class="m-1 flex flex-col justify-start gap-6">
+            <!-- Group 1 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="title"
+                  >Título:</label
+                >
+                <input
+                  id="title"
+                  formControlName="title"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <!-- Group 2 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="director"
+                  >Diretor:</label
+                >
+                <input
+                  id="director"
+                  formControlName="director"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <!-- Group 3 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex shrink grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="genre"
+                  >Gênero:</label
+                >
+                <input
+                  id="genre"
+                  formControlName="genre"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+              <div class="m-1 flex grow-0 items-end gap-4">
+                <label class="text-2xl text-secondary" for="year">Ano:</label>
+                <input
+                  id="year"
+                  formControlName="year"
+                  type="text"
+                  class="h-fit w-28 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+            <!-- Group 4 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="storyliner"
+                  >Sinopse:</label
+                >
+                <input
+                  id="storyline"
+                  formControlName="storyline"
+                  type="textarea"
+                  class="h-40 w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Divider -->
+        <div
+          class="h-6 w-full border-b-2 border-dashed border-b-highlight"
+        ></div>
+        <!-- Details -->
+        <div class="flex flex-col">
+          <h2 class="text-3xl font-extrabold text-highlight">Detalhes</h2>
+          <div class="m-1 flex flex-wrap justify-start gap-6">
+            <!-- Group 1 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="min-w-max text-2xl text-secondary" for="poster"
+                  >Capa: (url)</label
+                >
+                <input
+                  id="poster"
+                  formControlName="poster"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+            <!-- Group 2 -->
+            <div class="flex w-full items-end gap-2">
+              <div class="relative m-1 flex grow items-end gap-4">
+                <label class="min-w-max text-2xl text-secondary">Tags:</label>
+                <input
+                  id="tags"
+                  type="text"
+                  [(ngModel)]="tagInput"
+                  [ngModelOptions]="{ standalone: true }"
+                  (keydown.enter)="addTag($event)"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+                <button
+                  class="absolute right-0 top-2 rounded px-1 py-0.5 text-detail"
+                  *ngIf="tagInput.length > 0"
+                  (click)="addTag($event)"
+                >
+                  <ng-icon class="text-2xl" name="heroPlusCircleSolid">
+                  </ng-icon>
+                </button>
+              </div>
+              <div class="m-1 flex grow-0 items-end gap-4">
+                <label class="text-2xl text-secondary" for="status">
+                  Status:
+                </label>
+                <select
+                  id="status"
+                  formControlName="status"
+                  value=""
+                  class="h-fit w-40 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary"
+                >
+                  <option *ngFor="let status of statusList" [value]="status">
+                    {{ status }}
+                  </option>
+                </select>
+              </div>
+              <app-star-rating [mainForm]="form"></app-star-rating>
+            </div>
+            <div class="flex w-full gap-2">
+              <div
+                class="flex items-center gap-2 rounded bg-detail px-2 py-0.5 text-card"
+                *ngFor="let tag of tags"
+              >
+                {{ tag }}
+                <ng-icon
+                  class="cursor-pointer"
+                  (click)="popTag(tag)"
+                  name="heroXCircleSolid"
+                ></ng-icon>
+              </div>
+              <div *ngIf="tags.length === 0">
+                <h4 class="text-slate-400">Adicione uma tag</h4>
+              </div>
+            </div>
+            <!-- Group Array -->
+            <div class="flex w-full flex-col gap-2" formGroupName="quotesForm">
+              <div class="flex w-full flex-col gap-2" formArrayName="quotes">
+                <div
+                  class="flex w-full flex-col gap-2 rounded bg-main px-5 py-3"
+                  *ngFor="let quote of quotes.controls; let i = index"
+                  [formGroupName]="i"
+                >
+                  <div class="flex flex-col gap-2">
+                    <label
+                      class="text-xl font-bold text-highlight"
+                      [for]="'quote_' + i"
+                    >
+                      Citação {{ i + 1 }}
+                    </label>
+                    <textarea
+                      class="h-40 flex-grow resize-none overflow-x-hidden bg-main p-2 text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                      [id]="'quote_' + i"
+                      formControlName="quote"
+                      placeholder="Sua citação aqui"
+                    ></textarea>
+                  </div>
+                  <div class="flex justify-between">
+                    <div class="flex items-center gap-2">
+                      <label
+                        class="text-xl font-bold text-highlight"
+                        [for]="'page_' + i"
+                        >página:
+                      </label>
+                      <input
+                        class="h-fit w-24 bg-main px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                        type="number"
+                        [id]="'page_' + i"
+                        formControlName="page"
+                      />
+                    </div>
+                    <div class="flex items-center">
+                      <button
+                        class="rounded border-2 border-secondary px-2 py-px font-bold text-secondary"
+                        type="button"
+                        (click)="rmvQuote(i)"
+                      >
+                        Remover
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="w-fit rounded border-2 border-highlight bg-card px-2 py-1 text-highlight hover:border-secondary hover:text-secondary"
+                type="button"
+                (click)="addQuote()"
+              >
+                Adicione uma citação
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <!-- ############ -->
+      <!-- ### Case  ## -->
+      <!-- ### Album ## -->
+      <!-- ############ -->
+      <ng-container *ngSwitchCase="'Album'">
+        <!-- Info -->
+        <div class="flex w-full flex-col">
+          <h2 class="text-3xl font-extrabold text-highlight">
+            Informações Gerais
+          </h2>
+          <div class="m-1 flex flex-col justify-start gap-6">
+            <!-- Group 1 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="title"
+                  >Título:</label
+                >
+                <input
+                  id="title"
+                  formControlName="title"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <!-- Group 2 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="author"
+                  >Autor:</label
+                >
+                <input
+                  id="author"
+                  formControlName="author"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <!-- Group 3 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex shrink grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="genre"
+                  >Gênero:</label
+                >
+                <input
+                  id="genre"
+                  formControlName="genre"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+              <div class="m-1 flex grow-0 items-end gap-4">
+                <label class="text-2xl text-secondary" for="year">Ano:</label>
+                <input
+                  id="year"
+                  formControlName="year"
+                  type="text"
+                  class="h-fit w-28 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+              <div class="m-1 flex grow-0 items-end gap-4">
+                <label class="text-2xl text-secondary" for="pages"
+                  >Páginas:</label
+                >
+                <input
+                  id="pages"
+                  formControlName="pages"
+                  type="text"
+                  class="h-fit w-24 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Divider -->
+        <div
+          class="h-6 w-full border-b-2 border-dashed border-b-highlight"
+        ></div>
+        <!-- Details -->
+        <div class="flex flex-col">
+          <h2 class="text-3xl font-extrabold text-highlight">Detalhes</h2>
+          <div class="m-1 flex flex-wrap justify-start gap-6">
+            <!-- Group 1 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="min-w-max text-2xl text-secondary" for="cover"
+                  >Capa: (url)</label
+                >
+                <input
+                  id="cover"
+                  formControlName="cover"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+            </div>
+            <!-- Group 2 -->
+            <div class="flex w-full items-end gap-2">
+              <div class="relative m-1 flex grow items-end gap-4">
+                <label class="min-w-max text-2xl text-secondary">Tags:</label>
+                <input
+                  id="tags"
+                  type="text"
+                  [(ngModel)]="tagInput"
+                  [ngModelOptions]="{ standalone: true }"
+                  (keydown.enter)="addTag($event)"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+                <button
+                  class="absolute right-0 top-2 rounded px-1 py-0.5 text-detail"
+                  *ngIf="tagInput.length > 0"
+                  (click)="addTag($event)"
+                >
+                  <ng-icon class="text-2xl" name="heroPlusCircleSolid">
+                  </ng-icon>
+                </button>
+              </div>
+              <div class="m-1 flex grow-0 items-end gap-4">
+                <label class="text-2xl text-secondary" for="status">
+                  Status:
+                </label>
+                <select
+                  id="status"
+                  formControlName="status"
+                  value=""
+                  class="h-fit w-40 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary"
+                >
+                  <option *ngFor="let status of statusList" [value]="status">
+                    {{ status }}
+                  </option>
+                </select>
+              </div>
+              <app-star-rating [mainForm]="form"></app-star-rating>
+            </div>
+            <div class="flex w-full gap-2">
+              <div
+                class="flex items-center gap-2 rounded bg-detail px-2 py-0.5 text-card"
+                *ngFor="let tag of tags"
+              >
+                {{ tag }}
+                <ng-icon
+                  class="cursor-pointer"
+                  (click)="popTag(tag)"
+                  name="heroXCircleSolid"
+                ></ng-icon>
+              </div>
+              <div *ngIf="tags.length === 0">
+                <h4 class="text-slate-400">Adicione uma tag</h4>
+              </div>
+            </div>
+            <!-- Group Array -->
+            <div class="flex w-full flex-col gap-2" formGroupName="quotesForm">
+              <div class="flex w-full flex-col gap-2" formArrayName="quotes">
+                <div
+                  class="flex w-full flex-col gap-2 rounded bg-main px-5 py-3"
+                  *ngFor="let quote of quotes.controls; let i = index"
+                  [formGroupName]="i"
+                >
+                  <div class="flex flex-col gap-2">
+                    <label
+                      class="text-xl font-bold text-highlight"
+                      [for]="'quote_' + i"
+                    >
+                      Citação {{ i + 1 }}
+                    </label>
+                    <textarea
+                      class="h-40 flex-grow resize-none overflow-x-hidden bg-main p-2 text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                      [id]="'quote_' + i"
+                      formControlName="quote"
+                      placeholder="Sua citação aqui"
+                    ></textarea>
+                  </div>
+                  <div class="flex justify-between">
+                    <div class="flex items-center gap-2">
+                      <label
+                        class="text-xl font-bold text-highlight"
+                        [for]="'page_' + i"
+                        >página:
+                      </label>
+                      <input
+                        class="h-fit w-24 bg-main px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                        type="number"
+                        [id]="'page_' + i"
+                        formControlName="page"
+                      />
+                    </div>
+                    <div class="flex items-center">
+                      <button
+                        class="rounded border-2 border-secondary px-2 py-px font-bold text-secondary"
+                        type="button"
+                        (click)="rmvQuote(i)"
+                      >
+                        Remover
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="w-fit rounded border-2 border-highlight bg-card px-2 py-1 text-highlight hover:border-secondary hover:text-secondary"
+                type="button"
+                (click)="addQuote()"
+              >
+                Adicione uma citação
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <!-- Divider -->
+      <div class="h-6 w-full border-b-2 border-dashed border-b-highlight"></div>
+      <button
+        class="w-fit self-start rounded bg-secondary px-3 py-2 text-card shadow-lg hover:bg-highlight"
+        type="submit"
+      >
+        Adicionar {{ itemType }}
+      </button>
+    </form>
+  </ng-container>
+</div>
+<ng-template #noChoice>
+  <h2 class="text-2xl text-highlight">
+    Selecione o tipo de item que deseja adicionar à Biblioteca
+  </h2>
+</ng-template>

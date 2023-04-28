@@ -8,7 +8,6 @@ import {
 @Component({
   selector: 'app-star-rating',
   templateUrl: './star-rating.component.html',
-  styleUrls: ['./star-rating.component.css'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
