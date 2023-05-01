@@ -22,7 +22,6 @@
           (change)="onItemSelect($event)"
           class="h-fit w-1/2 border-b-2 border-highlight bg-main px-4 py-2 text-xl text-secondary"
         >
-          <option value="item">nenhum item selecionado</option>
           <option *ngFor="let type of itemTypes" [value]="type">
             {{ type }}
           </option>

@@ -3,9 +3,6 @@ import {
   FormGroup,
   FormBuilder,
   Validators,
-  FormArray,
-  AbstractControl,
-  ValidatorFn,
 } from '@angular/forms';
 import { inArrayValidator } from 'src/app/core/validators/inArrayValidator';
 
@@ -14,7 +11,7 @@ import { inArrayValidator } from 'src/app/core/validators/inArrayValidator';
   templateUrl: './adicionar.component.html',
 })
 export class AdicionarComponent implements OnInit {
-  item: 'Livro' | 'Filme' | 'Album' | 'item' = 'item';
+  item: 'Livro' | 'Filme' | 'Album' = 'Livro';
   itemTypes = ['Livro', 'Filme', 'Album'];
   bookStatusList = ['Lido', 'Lendo', 'Quero Ler', 'Em Espera', 'Abandonado'];
   filmStatusList = ['Visto', 'Quero Ver', 'Abandonado'];
@@ -51,11 +48,14 @@ export class AdicionarComponent implements OnInit {
         quotes: this.fb.array([]),
       }),
     });
+    this.mainForm = this.bookForm
     // FILM
     this.filmForm = this.fb.group({
       title: ['', Validators.required],
       director: ['', Validators.required],
+      writer: ['', Validators.required],
       storyline: ['', Validators.required],
+      country: ['', Validators.required],
       genre: [''],
       poster: ['', Validators.required],
       year: ['', Validators.required],
@@ -73,16 +73,18 @@ export class AdicionarComponent implements OnInit {
     // ALBUM
     this.albumForm = this.fb.group({
       title: ['', Validators.required],
-      band: ['', Validators.required],
-      storyline: ['', Validators.required],
+      artist: ['', Validators.required],
       genre: [''],
-      albumPic: ['', Validators.required],
+      cover: ['', Validators.required],
+      reviewForm: this.fb.group({
+        reviewer: [""],
+        review: [""]
+      }),
       year: ['', Validators.required],
-      runtime: ['', [Validators.required]],
       tags: [[]],
       rating: [1, [Validators.min(1), Validators.max(5)]],
-      songForm: this.fb.group({
-        song: this.fb.array([]),
+      trackForm: this.fb.group({
+        tracks: this.fb.array([]),
       }),
     });
   }

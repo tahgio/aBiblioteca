@@ -13,11 +13,17 @@ import {
   heroStarSolid,
   heroXCircleSolid,
   heroPlusCircleSolid,
+  heroCheckCircleSolid,
+  heroInformationCircleSolid,
+  heroExclamationCircleSolid,
+  heroExclamationTriangleSolid,
 } from '@ng-icons/heroicons/solid';
 import { heroStar } from '@ng-icons/heroicons/outline';
 import { AdicionarComponent } from './pages/adicionar/adicionar.component';
 import { StarRatingComponent } from './elements/star-rating/star-rating.component';
 import { AddFormComponent } from './elements/add-form/add-form.component';
+import { ToastComponent } from './elements/toast/toast.component';
+import { MessageService } from './core/services/message/message.service';
 
 @NgModule({
   declarations: [
@@ -27,6 +33,7 @@ import { AddFormComponent } from './elements/add-form/add-form.component';
     AdicionarComponent,
     StarRatingComponent,
     AddFormComponent,
+    ToastComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,9 +47,13 @@ import { AddFormComponent } from './elements/add-form/add-form.component';
       heroStarSolid,
       heroXCircleSolid,
       heroPlusCircleSolid,
+      heroCheckCircleSolid,
+      heroInformationCircleSolid,
+      heroExclamationCircleSolid,
+      heroExclamationTriangleSolid
     }),
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

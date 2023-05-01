@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
+import { MessageService } from 'src/app/core/services/message/message.service';
 
 @Component({
   selector: 'add-form',
@@ -17,22 +18,52 @@ export class AddFormComponent {
     return this.form.get('quotesForm.quotes') as FormArray;
   }
 
-  constructor(private fb: FormBuilder) {}
-
-  addQuote() {
-    this.quotes.push(
-      this.fb.group({
-        quote: [''],
-        page: [0],
-      })
-    );
+  get tracks(): FormArray {
+    return this.form.get("trackForm.tracks") as FormArray;
   }
+
+  constructor(private fb: FormBuilder, private msg: MessageService) {}
+
+  addQuote(type: "livro" | "filme"): void {
+    if(type === "livro") {
+      this.quotes.push(
+        this.fb.group({
+          quote: [''],
+          page: [0],
+        })
+      );
+    } else if (type === "filme") {
+      this.quotes.push(
+        this.fb.group({
+          quote: [''],
+        })
+      );
+    }
+  }
+
+  addTrack(trackNumber: number) {
+    this.tracks.push(
+      this.fb.group({
+        trackName: [""],
+        trackNumber: [trackNumber],
+        time: [""]
+      })
+    )
+  }
+
   rmvQuote(index: number) {
     this.quotes.removeAt(index);
   }
 
+  rmvTrack(index: number) {
+    this.tracks.removeAt(index);
+  }
+
+
+
   submitForm(value: object): void {
     console.log(value);
+    this.msg.showToast("success", "oi!")
   }
 
   addTag(event: Event) {

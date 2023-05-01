@@ -66,7 +66,7 @@
                 <input
                   id="year"
                   formControlName="year"
-                  type="text"
+                  type="number"
                   class="h-fit w-28 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 />
               </div>
@@ -77,7 +77,7 @@
                 <input
                   id="pages"
                   formControlName="pages"
-                  type="text"
+                  type="number"
                   class="h-fit w-24 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 />
               </div>
@@ -211,7 +211,7 @@
               <button
                 class="w-fit rounded border-2 border-highlight bg-card px-2 py-1 text-highlight hover:border-secondary hover:text-secondary"
                 type="button"
-                (click)="addQuote()"
+                (click)="addQuote('livro')"
               >
                 Adicione uma citação
               </button>
@@ -258,10 +258,21 @@
                   class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 />
               </div>
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="writer"
+                  >Roteirista:</label
+                >
+                <input
+                  id="writer"
+                  formControlName="writer"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
             </div>
 
             <!-- Group 3 -->
-            <div class="flex w-full flex-wrap gap-2">
+            <div class="flex w-full gap-2">
               <div class="m-1 flex shrink grow items-end gap-4">
                 <label class="text-2xl text-secondary" for="genre"
                   >Gênero:</label
@@ -273,27 +284,48 @@
                   class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 />
               </div>
+              <div class="m-1 flex shrink grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="country"
+                  >País:</label
+                >
+                <input
+                  id="country"
+                  formControlName="country"
+                  type="text"
+                  class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+              <div class="m-1 flex shrink grow-0 items-end gap-4">
+                <label class="text-2xl text-secondary" for="year">Duração:</label>
+                <input
+                  id="runtime"
+                  formControlName="runtime"
+                  type="text"
+                  class="h-fit w-28 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                />
+              </div>
+              
+            </div>
+            <!-- Group 4 -->
+            <div class="flex w-full flex-wrap gap-2">
+              <div class="m-1 flex grow items-end gap-4">
+                <label class="text-2xl text-secondary" for="storyline"
+                  >Sinopse:</label
+                >
+                <textarea
+                  id="storyline"
+                  formControlName="storyline"
+                  type="textarea"
+                  class="h-40 resize-none w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                ></textarea>
+              </div>
               <div class="m-1 flex grow-0 items-end gap-4">
                 <label class="text-2xl text-secondary" for="year">Ano:</label>
                 <input
                   id="year"
                   formControlName="year"
-                  type="text"
+                  type="number"
                   class="h-fit w-28 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
-                />
-              </div>
-            </div>
-            <!-- Group 4 -->
-            <div class="flex w-full flex-wrap gap-2">
-              <div class="m-1 flex grow items-end gap-4">
-                <label class="text-2xl text-secondary" for="storyliner"
-                  >Sinopse:</label
-                >
-                <input
-                  id="storyline"
-                  formControlName="storyline"
-                  type="textarea"
-                  class="h-40 w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 />
               </div>
             </div>
@@ -398,19 +430,6 @@
                     ></textarea>
                   </div>
                   <div class="flex justify-between">
-                    <div class="flex items-center gap-2">
-                      <label
-                        class="text-xl font-bold text-highlight"
-                        [for]="'page_' + i"
-                        >página:
-                      </label>
-                      <input
-                        class="h-fit w-24 bg-main px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
-                        type="number"
-                        [id]="'page_' + i"
-                        formControlName="page"
-                      />
-                    </div>
                     <div class="flex items-center">
                       <button
                         class="rounded border-2 border-secondary px-2 py-px font-bold text-secondary"
@@ -426,7 +445,7 @@
               <button
                 class="w-fit rounded border-2 border-highlight bg-card px-2 py-1 text-highlight hover:border-secondary hover:text-secondary"
                 type="button"
-                (click)="addQuote()"
+                (click)="addQuote('filme')"
               >
                 Adicione uma citação
               </button>
@@ -463,12 +482,12 @@
             <!-- Group 2 -->
             <div class="flex w-full flex-wrap gap-2">
               <div class="m-1 flex grow items-end gap-4">
-                <label class="text-2xl text-secondary" for="author"
-                  >Autor:</label
+                <label class="text-2xl text-secondary" for="artist"
+                  >Artista:</label
                 >
                 <input
-                  id="author"
-                  formControlName="author"
+                  id="srtist"
+                  formControlName="artist"
                   type="text"
                   class="h-fit w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 />
@@ -493,22 +512,36 @@
                 <input
                   id="year"
                   formControlName="year"
-                  type="text"
+                  type="number"
                   class="h-fit w-28 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 />
               </div>
-              <div class="m-1 flex grow-0 items-end gap-4">
-                <label class="text-2xl text-secondary" for="pages"
-                  >Páginas:</label
-                >
+            </div>
+
+            <!-- Group 4 -->
+            <div class="flex w-full flex-wrap gap-2" formGroupName="reviewForm">
+              <div class="m-1 flex grow items-start flex-col gap-4">
+                <label class="text-2xl text-secondary" for="review">
+                Review:
+              </label>
+                <textarea
+                  id="review"
+                  formControlName="review"
+                  type="textarea"
+                  class="h-40 resize-none w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                ></textarea>
+              </div>
+              <div class="m-1 flex grow-0 flex-col items-start justify-end gap-4">
+                <label class="text-2xl text-secondary" for="reviewer">Reviewer:</label>
                 <input
-                  id="pages"
-                  formControlName="pages"
+                  id="reviewer"
+                  formControlName="reviewer"
                   type="text"
-                  class="h-fit w-24 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                  class="h-fit w-40 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 />
               </div>
             </div>
+
           </div>
         </div>
         <!-- Divider -->
@@ -554,21 +587,6 @@
                   </ng-icon>
                 </button>
               </div>
-              <div class="m-1 flex grow-0 items-end gap-4">
-                <label class="text-2xl text-secondary" for="status">
-                  Status:
-                </label>
-                <select
-                  id="status"
-                  formControlName="status"
-                  value=""
-                  class="h-fit w-40 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary"
-                >
-                  <option *ngFor="let status of statusList" [value]="status">
-                    {{ status }}
-                  </option>
-                </select>
-              </div>
               <app-star-rating [mainForm]="form"></app-star-rating>
             </div>
             <div class="flex w-full gap-2">
@@ -588,11 +606,11 @@
               </div>
             </div>
             <!-- Group Array -->
-            <div class="flex w-full flex-col gap-2" formGroupName="quotesForm">
-              <div class="flex w-full flex-col gap-2" formArrayName="quotes">
+            <div class="flex w-full flex-col gap-2" formGroupName="trackForm">
+              <div class="flex w-full flex-col gap-2" formArrayName="tracks">
                 <div
                   class="flex w-full flex-col gap-2 rounded bg-main px-5 py-3"
-                  *ngFor="let quote of quotes.controls; let i = index"
+                  *ngFor="let track of tracks.controls; let i = index"
                   [formGroupName]="i"
                 >
                   <div class="flex flex-col gap-2">
@@ -600,34 +618,35 @@
                       class="text-xl font-bold text-highlight"
                       [for]="'quote_' + i"
                     >
-                      Citação {{ i + 1 }}
+                      Faixa {{ i + 1 }}
                     </label>
-                    <textarea
-                      class="h-40 flex-grow resize-none overflow-x-hidden bg-main p-2 text-secondary focus:rounded focus:shadow-md focus:outline-none"
-                      [id]="'quote_' + i"
-                      formControlName="quote"
-                      placeholder="Sua citação aqui"
-                    ></textarea>
+                    <input
+                      class="h-fit flex-grow resize-none overflow-x-hidden bg-main p-2 text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                      type="text"
+                      [id]="'track_' + i"
+                      formControlName="trackName"
+                      placeholder="Nome da música"
+                    >
                   </div>
                   <div class="flex justify-between">
                     <div class="flex items-center gap-2">
                       <label
                         class="text-xl font-bold text-highlight"
-                        [for]="'page_' + i"
-                        >página:
+                        [for]="'time_' + i"
+                        >Duração:
                       </label>
                       <input
                         class="h-fit w-24 bg-main px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
-                        type="number"
-                        [id]="'page_' + i"
-                        formControlName="page"
+                        type="time"
+                        [id]="'time_' + i"
+                        formControlName="time"
                       />
                     </div>
                     <div class="flex items-center">
                       <button
                         class="rounded border-2 border-secondary px-2 py-px font-bold text-secondary"
                         type="button"
-                        (click)="rmvQuote(i)"
+                        (click)="rmvTrack(i)"
                       >
                         Remover
                       </button>
@@ -638,9 +657,9 @@
               <button
                 class="w-fit rounded border-2 border-highlight bg-card px-2 py-1 text-highlight hover:border-secondary hover:text-secondary"
                 type="button"
-                (click)="addQuote()"
+                (click)="addTrack(tracks.length + 1)"
               >
-                Adicione uma citação
+                Adicione uma faixa
               </button>
             </div>
           </div>
