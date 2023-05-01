@@ -3,10 +3,10 @@ import { ToastComponent } from 'src/app/elements/toast/toast.component';
 import { ToastTypes } from '../../types/Unions';
 
 const MESSAGE_ICONS = {
-  success: "heroCheckCircleSolid" as const,
-  info: "heroInformationCircleSolid" as const,
-  warning: "heroExclamationTriangleSolid" as const,
-  error: "heroExclamationCircleSolid" as const,
+  success: "heroCheckCircle" as const,
+  info: "heroInformationCircle" as const,
+  warning: "heroExclamationTriangle" as const,
+  error: "heroExclamationCircle" as const,
 }
 @Injectable({
   providedIn: 'root'

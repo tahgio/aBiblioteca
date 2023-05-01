@@ -1,3 +1,3 @@
 export type ToastTypes = "success" | "warning" | "error" | "info"
 
-export type ToastIcons = "heroCheckCircleSolid" |"heroInformationCircleSolid" | "heroExclamationCircleSolid" | "heroExclamationTriangleSolid"
+export type ToastIcons = "heroCheckCircle" |"heroInformationCircle" | "heroExclamationCircle" | "heroExclamationTriangle"

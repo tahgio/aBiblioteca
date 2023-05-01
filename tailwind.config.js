@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{html,ts}"],
+  safelist: [
+    {
+      pattern: /(text|border)-(success|error|warning|info)/
+    }  ],
   theme: {
     extend: {
       colors: {
@@ -11,7 +15,10 @@ module.exports = {
         highlight: "#078080",
         secondary: "#f45d48",
         tertiary: "#f8f5f2",
-        success: "#71FB63"
+        success: "#229941",
+        error: "#e30707",
+        warning: "#e36e07",
+        info: "#88898a"
       },
       fontFamily: {
         sans: ["Hanken Grotesk", "sans-serif"],

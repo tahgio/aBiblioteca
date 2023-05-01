@@ -13,12 +13,11 @@ import {
   heroStarSolid,
   heroXCircleSolid,
   heroPlusCircleSolid,
-  heroCheckCircleSolid,
-  heroInformationCircleSolid,
-  heroExclamationCircleSolid,
-  heroExclamationTriangleSolid,
 } from '@ng-icons/heroicons/solid';
-import { heroStar } from '@ng-icons/heroicons/outline';
+import { heroStar, heroCheckCircle,
+  heroInformationCircle,
+  heroExclamationCircle,
+  heroExclamationTriangle, } from '@ng-icons/heroicons/outline';
 import { AdicionarComponent } from './pages/adicionar/adicionar.component';
 import { StarRatingComponent } from './elements/star-rating/star-rating.component';
 import { AddFormComponent } from './elements/add-form/add-form.component';
@@ -47,10 +46,10 @@ import { MessageService } from './core/services/message/message.service';
       heroStarSolid,
       heroXCircleSolid,
       heroPlusCircleSolid,
-      heroCheckCircleSolid,
-      heroInformationCircleSolid,
-      heroExclamationCircleSolid,
-      heroExclamationTriangleSolid
+      heroCheckCircle,
+      heroInformationCircle,
+      heroExclamationCircle,
+      heroExclamationTriangle,
     }),
   ],
   providers: [MessageService],

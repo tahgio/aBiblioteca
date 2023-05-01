@@ -63,7 +63,7 @@ export class AddFormComponent {
 
   submitForm(value: object): void {
     console.log(value);
-    this.msg.showToast("success", "oi!")
+    this.msg.showToast("success", `Seu ${this.itemType} foi adicionado com sucesso!`)
   }
 
   addTag(event: Event) {
