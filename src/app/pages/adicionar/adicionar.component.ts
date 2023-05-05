@@ -4,6 +4,8 @@ import {
   FormBuilder,
   Validators,
 } from '@angular/forms';
+import { BookStatusList } from 'src/app/core/types/Books';
+import { UnionToArray } from 'src/app/core/types/Methods';
 import { inArrayValidator } from 'src/app/core/validators/inArrayValidator';
 
 @Component({
@@ -13,7 +15,7 @@ import { inArrayValidator } from 'src/app/core/validators/inArrayValidator';
 export class AdicionarComponent implements OnInit {
   item: 'Livro' | 'Filme' | 'Album' = 'Livro';
   itemTypes = ['Livro', 'Filme', 'Album'];
-  bookStatusList = ['Lido', 'Lendo', 'Quero Ler', 'Em Espera', 'Abandonado'];
+  bookStatusList: UnionToArray<BookStatusList> = ['Lido', 'Lendo', 'Quero Ler', 'Em Espera', 'Abandonado'];
   filmStatusList = ['Visto', 'Quero Ver', 'Abandonado'];
   tagInput: string = '';
   tags: string[] = [];
