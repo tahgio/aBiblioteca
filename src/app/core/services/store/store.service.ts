@@ -40,6 +40,7 @@ export class StoreService {
     // Add to collection and to subSelection
     addDoc(instance, objtoAdd).then((res) => {
       const subInstance = collection(this.firestore, res.path, 'quotes');
+
       const docRef = doc(this.firestore, entry, res.id);
       this.getLastRandomNumber('quotes').subscribe((lastRandom) => {
         subObj.forEach((e, i) => {
