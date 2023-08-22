@@ -1,5 +1,5 @@
 <div class="flex h-fit w-full flex-col rounded bg-card p-5">
-  <ng-container *ngIf="itemType !== 'item'; else noChoice">
+  <ng-container>
     <form
       [formGroup]="form"
       class="flex flex-col items-center justify-center gap-2"
@@ -161,7 +161,7 @@
               </div>
             </div>
             <!-- Group Array -->
-            <div class="flex w-full flex-col gap-2" formGroupName="quotesForm">
+            <form class="flex w-full flex-col gap-2" [formGroup]="quotesForm">
               <div class="flex w-full flex-col gap-2" formArrayName="quotes">
                 <div
                   class="flex w-full flex-col gap-2 rounded bg-main px-5 py-3"
@@ -200,7 +200,7 @@
                       <button
                         class="rounded border-2 border-secondary px-2 py-px font-bold text-secondary"
                         type="button"
-                        (click)="rmvQuote(i)"
+                        (click)="rmvSub('Livro', i)"
                       >
                         Remover
                       </button>
@@ -211,11 +211,11 @@
               <button
                 class="w-fit rounded border-2 border-highlight bg-card px-2 py-1 text-highlight hover:border-secondary hover:text-secondary"
                 type="button"
-                (click)="addQuote('livro')"
+                (click)="addSub('Livro')"
               >
                 Adicione uma citação
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </ng-container>
@@ -296,7 +296,9 @@
                 />
               </div>
               <div class="m-1 flex shrink grow-0 items-end gap-4">
-                <label class="text-2xl text-secondary" for="year">Duração:</label>
+                <label class="text-2xl text-secondary" for="year"
+                  >Duração:</label
+                >
                 <input
                   id="runtime"
                   formControlName="runtime"
@@ -304,7 +306,6 @@
                   class="h-fit w-28 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 />
               </div>
-              
             </div>
             <!-- Group 4 -->
             <div class="flex w-full flex-wrap gap-2">
@@ -316,7 +317,7 @@
                   id="storyline"
                   formControlName="storyline"
                   type="textarea"
-                  class="h-40 resize-none w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                  class="h-40 w-full resize-none border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 ></textarea>
               </div>
               <div class="m-1 flex grow-0 items-end gap-4">
@@ -408,11 +409,14 @@
               </div>
             </div>
             <!-- Group Array -->
-            <div class="flex w-full flex-col gap-2" formGroupName="quotesForm">
-              <div class="flex w-full flex-col gap-2" formArrayName="quotes">
+            <div class="flex w-full flex-col gap-2" [formGroup]="linesForm">
+              <div
+                class="flex w-full flex-col gap-2"
+                formArrayName="movieLines"
+              >
                 <div
                   class="flex w-full flex-col gap-2 rounded bg-main px-5 py-3"
-                  *ngFor="let quote of quotes.controls; let i = index"
+                  *ngFor="let lines of movieLines.controls; let i = index"
                   [formGroupName]="i"
                 >
                   <div class="flex flex-col gap-2">
@@ -434,7 +438,7 @@
                       <button
                         class="rounded border-2 border-secondary px-2 py-px font-bold text-secondary"
                         type="button"
-                        (click)="rmvQuote(i)"
+                        (click)="rmvSub('Filme', i)"
                       >
                         Remover
                       </button>
@@ -445,7 +449,7 @@
               <button
                 class="w-fit rounded border-2 border-highlight bg-card px-2 py-1 text-highlight hover:border-secondary hover:text-secondary"
                 type="button"
-                (click)="addQuote('filme')"
+                (click)="addSub('Filme')"
               >
                 Adicione uma citação
               </button>
@@ -520,19 +524,23 @@
 
             <!-- Group 4 -->
             <div class="flex w-full flex-wrap gap-2" formGroupName="reviewForm">
-              <div class="m-1 flex grow items-start flex-col gap-4">
+              <div class="m-1 flex grow flex-col items-start gap-4">
                 <label class="text-2xl text-secondary" for="review">
-                Review:
-              </label>
+                  Review:
+                </label>
                 <textarea
                   id="review"
                   formControlName="review"
                   type="textarea"
-                  class="h-40 resize-none w-full border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                  class="h-40 w-full resize-none border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
                 ></textarea>
               </div>
-              <div class="m-1 flex grow-0 flex-col items-start justify-end gap-4">
-                <label class="text-2xl text-secondary" for="reviewer">Reviewer:</label>
+              <div
+                class="m-1 flex grow-0 flex-col items-start justify-end gap-4"
+              >
+                <label class="text-2xl text-secondary" for="reviewer"
+                  >Reviewer:</label
+                >
                 <input
                   id="reviewer"
                   formControlName="reviewer"
@@ -541,7 +549,6 @@
                 />
               </div>
             </div>
-
           </div>
         </div>
         <!-- Divider -->
@@ -606,7 +613,7 @@
               </div>
             </div>
             <!-- Group Array -->
-            <div class="flex w-full flex-col gap-2" formGroupName="trackForm">
+            <div class="flex w-full flex-col gap-2" [formGroup]="tracksForm">
               <div class="flex w-full flex-col gap-2" formArrayName="tracks">
                 <div
                   class="flex w-full flex-col gap-2 rounded bg-main px-5 py-3"
@@ -626,7 +633,7 @@
                       [id]="'track_' + i"
                       formControlName="trackName"
                       placeholder="Nome da música"
-                    >
+                    />
                   </div>
                   <div class="flex justify-between">
                     <div class="flex items-center gap-2">
@@ -646,7 +653,7 @@
                       <button
                         class="rounded border-2 border-secondary px-2 py-px font-bold text-secondary"
                         type="button"
-                        (click)="rmvTrack(i)"
+                        (click)="rmvSub('Album', i)"
                       >
                         Remover
                       </button>
@@ -657,7 +664,7 @@
               <button
                 class="w-fit rounded border-2 border-highlight bg-card px-2 py-1 text-highlight hover:border-secondary hover:text-secondary"
                 type="button"
-                (click)="addTrack(tracks.length + 1)"
+                (click)="addSub('Album', tracks.length + 1)"
               >
                 Adicione uma faixa
               </button>
@@ -676,8 +683,3 @@
     </form>
   </ng-container>
 </div>
-<ng-template #noChoice>
-  <h2 class="text-2xl text-highlight">
-    Selecione o tipo de item que deseja adicionar à Biblioteca
-  </h2>
-</ng-template>

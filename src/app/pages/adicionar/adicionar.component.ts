@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
-import { BookStatusList } from 'src/app/core/types/Books';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { BookStatusList } from 'src/app/core/types/Models';
 import { UnionToArray } from 'src/app/core/types/Methods';
 import { inArrayValidator } from 'src/app/core/validators/inArrayValidator';
 
@@ -15,7 +11,13 @@ import { inArrayValidator } from 'src/app/core/validators/inArrayValidator';
 export class AdicionarComponent implements OnInit {
   item: 'Livro' | 'Filme' | 'Album' = 'Livro';
   itemTypes = ['Livro', 'Filme', 'Album'];
-  bookStatusList: UnionToArray<BookStatusList> = ['Lido', 'Lendo', 'Quero Ler', 'Em Espera', 'Abandonado'];
+  bookStatusList: UnionToArray<BookStatusList> = [
+    'Lido',
+    'Lendo',
+    'Quero Ler',
+    'Em Espera',
+    'Abandonado',
+  ];
   filmStatusList = ['Visto', 'Quero Ver', 'Abandonado'];
   tagInput: string = '';
   tags: string[] = [];
@@ -46,11 +48,8 @@ export class AdicionarComponent implements OnInit {
         [Validators.required, inArrayValidator(this.bookStatusList)],
       ],
       rating: [1, [Validators.min(1), Validators.max(5)]],
-      quotesForm: this.fb.group({
-        quotes: this.fb.array([]),
-      }),
     });
-    this.mainForm = this.bookForm
+    this.mainForm = this.bookForm;
     // FILM
     this.filmForm = this.fb.group({
       title: ['', Validators.required],
@@ -79,8 +78,8 @@ export class AdicionarComponent implements OnInit {
       genre: [''],
       cover: ['', Validators.required],
       reviewForm: this.fb.group({
-        reviewer: [""],
-        review: [""]
+        reviewer: [''],
+        review: [''],
       }),
       year: ['', Validators.required],
       tags: [[]],

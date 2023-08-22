@@ -24,7 +24,7 @@ import { AddFormComponent } from './elements/add-form/add-form.component';
 import { ToastComponent } from './elements/toast/toast.component';
 import { MessageService } from './core/services/message/message.service';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { LivrosComponent } from './pages/livros/livros.component';

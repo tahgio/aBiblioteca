@@ -6,7 +6,7 @@ const NAV_SIZE = 272;
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'tlibrary';
+  title = 'aBiblioteca';
   navSize = NAV_SIZE;
 
   toggleSize(isNavOpen: boolean) {
