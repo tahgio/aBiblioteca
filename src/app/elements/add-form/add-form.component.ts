@@ -113,12 +113,12 @@ export class AddFormComponent {
         );
       })
       // Throw error if not
-      .catch((e) => {
+      .catch((err: Error) => {
         this.msg.showToast(
           'error',
           `Ocorreu um erro ao tentar adicionar o ${this.itemType} à base de dados`
         );
-        throw e;
+        throw err;
       });
     //Reset Form
     this.form.reset();
@@ -131,7 +131,7 @@ export class AddFormComponent {
   addTag(event: Event) {
     event.preventDefault();
     const lookForDup = this.tags.findIndex(
-      (e) => e.toLowerCase() === this.tagInput.trim().toLowerCase()
+      (element) => element.toLowerCase() === this.tagInput.trim().toLowerCase()
     );
     if (this.tagInput.trim() !== '' && lookForDup < 0) {
       const tag =

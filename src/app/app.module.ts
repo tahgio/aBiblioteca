@@ -14,22 +14,26 @@ import {
   heroXCircleSolid,
   heroPlusCircleSolid,
 } from '@ng-icons/heroicons/solid';
-import { heroStar, heroCheckCircle,
+import {
+  heroStar,
+  heroCheckCircle,
   heroInformationCircle,
   heroExclamationCircle,
-  heroExclamationTriangle, } from '@ng-icons/heroicons/outline';
+  heroExclamationTriangle,
+} from '@ng-icons/heroicons/outline';
 import { AdicionarComponent } from './pages/adicionar/adicionar.component';
 import { StarRatingComponent } from './elements/star-rating/star-rating.component';
 import { AddFormComponent } from './elements/add-form/add-form.component';
 import { ToastComponent } from './elements/toast/toast.component';
 import { MessageService } from './core/services/message/message.service';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../../environments/environment';
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { LivrosComponent } from './pages/livros/livros.component';
 import { FilmesComponent } from './pages/filmes/filmes.component';
 import { AlbumsComponent } from './pages/albums/albums.component';
+import { HoverInfoDirective } from './core/directives/hover-info/hover-info.directive';
 
 @NgModule({
   declarations: [
@@ -43,6 +47,7 @@ import { AlbumsComponent } from './pages/albums/albums.component';
     LivrosComponent,
     FilmesComponent,
     AlbumsComponent,
+    HoverInfoDirective,
   ],
   imports: [
     BrowserModule,

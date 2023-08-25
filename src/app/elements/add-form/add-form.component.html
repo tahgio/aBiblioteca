@@ -680,6 +680,8 @@
       <!-- Divider -->
       <div class="h-6 w-full border-b-2 border-dashed border-b-highlight"></div>
       <button
+        appHoverInfo="Por favor preencha os campos obrigatórios"
+        [disableAppHover]="form.valid"
         [disabled]="form.invalid"
         class="w-fit self-start rounded bg-secondary px-3 py-2 text-card shadow-lg enabled:hover:bg-highlight disabled:opacity-40"
         type="submit"
