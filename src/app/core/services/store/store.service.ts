@@ -10,16 +10,15 @@ import {
   QueryDocumentSnapshot,
   SnapshotOptions,
   collectionGroup,
-  docData,
   getDocs,
   limit,
   orderBy,
-  writeBatch,
   doc,
 } from '@angular/fire/firestore';
-import { EntryType } from '../../types/Unions';
+import { EntryType, FormModels, SubFormModels } from '../../types/Unions';
 import { first, map, mergeAll } from 'rxjs';
-import { BookModel, QuoteModel } from '../../types/Models';
+import { getSubItemType } from '../../types/Methods';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -34,39 +33,47 @@ export class StoreService {
   }
 
   // -- Add Form main method
-  addToCollection(entry: EntryType, objtoAdd: BookModel, subObj: QuoteModel[]) {
+  async addToCollection(
+    entry: EntryType,
+    objtoAdd: FormModels,
+    subObj: SubFormModels[],
+    form: FormGroup
+  ): Promise<void> {
+    // Check for Form Errors
+    if (form.invalid) {
+      return Promise.reject(new Error('invalid form'));
+    }
     // Init
     const instance = collection(this.firestore, entry);
     // Add to collection and to subSelection
-    addDoc(instance, objtoAdd).then((res) => {
-      const subInstance = collection(this.firestore, res.path, 'quotes');
-
-      const docRef = doc(this.firestore, entry, res.id);
-      this.getLastRandomNumber('quotes').subscribe((lastRandom) => {
-        subObj.forEach((e, i) => {
-          const subWithRandom: QuoteModel = {
-            ...e,
-            _random: lastRandom + i + 1,
-            _parent: docRef,
-            _parentTitle: objtoAdd.title,
-          };
-          addDoc(subInstance, subWithRandom);
-        });
+    const res = await addDoc(instance, objtoAdd);
+    const subInstance = collection(
+      this.firestore,
+      res.path,
+      getSubItemType(entry)
+    );
+    const docRef = doc(this.firestore, entry, res.id);
+    this.getLastRandomNumber('quotes').subscribe((lastRandom) => {
+      subObj.forEach((e, i) => {
+        const subWithMetadata: SubFormModels = {
+          ...e,
+          _random: lastRandom + i + 1,
+          _parent: docRef,
+          _parentTitle: objtoAdd.title,
+        };
+        addDoc(subInstance, subWithMetadata);
       });
     });
-    //sub.unsubscribe()
   }
 
   //SubCollection
-  loadSub(entry: 'books', id: string, field: 'quotes'): DocumentData;
-  loadSub(entry: 'films', id: string, field: 'movieLines'): DocumentData;
-  loadSub(entry: 'albums', id: string, field: 'tracks'): DocumentData;
-  loadSub(
-    entry: EntryType,
-    id: string,
-    field: 'quotes' | 'tracks' | 'movieLines'
-  ): DocumentData {
-    const instance = collection(this.firestore, entry, id, field);
+  loadSub(entry: EntryType, id: string): DocumentData {
+    const instance = collection(
+      this.firestore,
+      entry,
+      id,
+      getSubItemType(entry)
+    );
     return collectionData(instance);
   }
 
@@ -90,7 +97,7 @@ export class StoreService {
         limit(1)
       ).withConverter(randomNumberConverter)
     );
-    // Return observable mapped
+    // Return observable mapped getting only the first result and unsubscribing
     return lastNumber$.pipe(
       first(),
       map((n) => n[0])
@@ -109,25 +116,6 @@ export class StoreService {
         return data['_random'] as number;
       },
     };
-    const qConverter = {
-      toFirestore: () => ({}),
-      fromFirestore: (
-        snapshot: QueryDocumentSnapshot,
-        options: SnapshotOptions
-      ) => {
-        const data = snapshot.data(options);
-        const title$ = docData(data['book']).pipe(
-          map((e) => {
-            return {
-              title: e['title'],
-              quote: data['quote'],
-              page: data['page'],
-            };
-          })
-        );
-        return title$;
-      },
-    };
     // get last "_random" entry field
     return (
       this.getLastRandomNumber(field)
@@ -141,11 +129,8 @@ export class StoreService {
                 collectionGroup(this.firestore, field),
                 where('_random', '==', randomNumber),
                 limit(1)
-              ).withConverter(qConverter)
-            ).pipe(
-              map((el) => el[0]),
-              mergeAll()
-            );
+              )
+            ).pipe(mergeAll());
           })
         )
         // merge all

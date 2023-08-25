@@ -23,10 +23,14 @@ export type UnionToArray<T, A extends unknown[] = []> = IsUnion<T> extends true
   : [T, ...A];
 
 /*
- *  ASSERTION FUNCTIONS
+ *  ASSERTION AND CHECKING FUNCTIONS
  */
 export function isString(value: unknown): asserts value is string {
   if (typeof value !== 'string') throw new Error('Not a string');
+}
+
+export function assureNever(value: never): Error {
+  return new Error(value);
 }
 
 /*
