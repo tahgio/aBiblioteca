@@ -1,24 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BookStatusList } from 'src/app/core/types/Models';
+import { BookStatusList, MovieStatusList } from 'src/app/core/types/Models';
 import { UnionToArray } from 'src/app/core/types/Methods';
 import { inArrayValidator } from 'src/app/core/validators/inArrayValidator';
+import { ItemType } from 'src/app/core/types/Unions';
+import { bookStatusList, filmStatusList } from 'src/app/core/types/Consts';
 
 @Component({
   selector: 'app-adicionar',
   templateUrl: './adicionar.component.html',
 })
 export class AdicionarComponent implements OnInit {
-  item: 'Livro' | 'Filme' | 'Album' = 'Livro';
-  itemTypes = ['Livro', 'Filme', 'Album'];
-  bookStatusList: UnionToArray<BookStatusList> = [
-    'Lido',
-    'Lendo',
-    'Quero Ler',
-    'Em Espera',
-    'Abandonado',
-  ];
-  filmStatusList = ['Visto', 'Quero Ver', 'Abandonado'];
+  item: ItemType = 'Livro';
+  itemTypes: UnionToArray<ItemType> = ['Livro', 'Filme', 'Album'];
+
   tagInput: string = '';
   tags: string[] = [];
 
@@ -43,10 +38,7 @@ export class AdicionarComponent implements OnInit {
         [Validators.min(10), Validators.max(9999), Validators.required],
       ],
       tags: [[]],
-      status: [
-        '',
-        [Validators.required, inArrayValidator(this.bookStatusList)],
-      ],
+      status: ['', [Validators.required, inArrayValidator(bookStatusList)]],
       rating: [1, [Validators.min(1), Validators.max(5)]],
     });
     this.mainForm = this.bookForm;
@@ -58,18 +50,12 @@ export class AdicionarComponent implements OnInit {
       storyline: ['', Validators.required],
       country: ['', Validators.required],
       genre: [''],
-      poster: ['', Validators.required],
+      cover: ['', Validators.required],
       year: ['', Validators.required],
       runtime: ['', [Validators.required]],
       tags: [[]],
-      status: [
-        '',
-        [Validators.required, inArrayValidator(this.filmStatusList)],
-      ],
+      status: ['', [Validators.required, inArrayValidator(filmStatusList)]],
       rating: [1, [Validators.min(1), Validators.max(5)]],
-      quotesForm: this.fb.group({
-        quotes: this.fb.array([]),
-      }),
     });
     // ALBUM
     this.albumForm = this.fb.group({
@@ -77,16 +63,13 @@ export class AdicionarComponent implements OnInit {
       artist: ['', Validators.required],
       genre: [''],
       cover: ['', Validators.required],
-      reviewForm: this.fb.group({
+      albumReview: this.fb.group({
         reviewer: [''],
         review: [''],
       }),
       year: ['', Validators.required],
       tags: [[]],
       rating: [1, [Validators.min(1), Validators.max(5)]],
-      trackForm: this.fb.group({
-        tracks: this.fb.array([]),
-      }),
     });
   }
 

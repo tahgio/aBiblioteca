@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { first } from 'rxjs';
 import { StoreService } from 'src/app/core/services/store/store.service';
 
 @Component({
   selector: 'app-livros',
   templateUrl: './livros.component.html',
 })
-export class LivrosComponent implements OnInit, OnDestroy {
+export class LivrosComponent implements OnInit {
   constructor(private store: StoreService) {}
 
   async ngOnInit() {
@@ -16,6 +17,4 @@ export class LivrosComponent implements OnInit, OnDestroy {
     //   console.log(e);
     // });
   }
-
-  ngOnDestroy(): void {}
 }

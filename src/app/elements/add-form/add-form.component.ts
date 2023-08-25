@@ -2,8 +2,18 @@ import { Component, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'src/app/core/services/message/message.service';
 import { StoreService } from 'src/app/core/services/store/store.service';
-import { convertToEntrytype } from 'src/app/core/types/Methods';
-import { EntryType, ItemType } from 'src/app/core/types/Unions';
+import { assureNever, convertToEntrytype } from 'src/app/core/types/Methods';
+import {
+  MovieLineModel,
+  QuoteModel,
+  TrackModel,
+} from 'src/app/core/types/Models';
+import {
+  EntryType,
+  FormModels,
+  ItemType,
+  SubFormModels,
+} from 'src/app/core/types/Unions';
 
 @Component({
   selector: 'add-form',
@@ -11,7 +21,7 @@ import { EntryType, ItemType } from 'src/app/core/types/Unions';
 })
 export class AddFormComponent {
   @Input() itemType!: ItemType;
-  @Input() form!: any;
+  @Input() form!: FormGroup;
 
   statusList = ['Lido', 'Lendo', 'Quero Ler', 'Em Espera', 'Abandonado'];
   tagInput: string = '';
@@ -76,12 +86,12 @@ export class AddFormComponent {
   }
 
   rmvSub(type: ItemType, index: number) {
-    if ((type = 'Livro')) {
+    if (type === 'Livro') {
       this.quotes.removeAt(index);
-    } else if ((type = 'Filme')) {
+    } else if (type === 'Filme') {
       this.movieLines.removeAt(index);
       //TODO: add logic for updating tracknumber when removing it
-    } else if ((type = 'Album')) {
+    } else if (type === 'Album') {
       this.tracks.removeAt(index);
     }
   }
@@ -89,19 +99,35 @@ export class AddFormComponent {
   /*
    * Submit button method that adds form obj to db
    */
-  submitForm(formValue: any): void {
-    console.log({ formValue });
-    this.store.addToCollection(
-      convertToEntrytype(this.itemType),
-      formValue,
-      this.quotes.value
-    );
-    this.msg.showToast(
-      'success',
-      `Seu ${this.itemType} foi adicionado com sucesso!`
-    );
+  submitForm(formValue: FormModels): void {
+    // Init
+    const entry = convertToEntrytype(this.itemType);
+    // Call service that adds entry to db
+    this.store
+      .addToCollection(entry, formValue, this.getSubForm(entry), this.form)
+      // Show success toast if everything ok
+      .then(() => {
+        this.msg.showToast(
+          'success',
+          `Seu ${this.itemType} foi adicionado com sucesso!`
+        );
+      })
+      // Throw error if not
+      .catch((e) => {
+        this.msg.showToast(
+          'error',
+          `Ocorreu um erro ao tentar adicionar o ${this.itemType} à base de dados`
+        );
+        throw e;
+      });
+    //Reset Form
+    this.form.reset();
   }
 
+  /*
+   * Tag Methods
+   */
+  // Add tag to Selected form
   addTag(event: Event) {
     event.preventDefault();
     const lookForDup = this.tags.findIndex(
@@ -117,8 +143,25 @@ export class AddFormComponent {
     }
   }
 
+  // Remove tag to Selected form
   popTag(name: string) {
     this.tags = this.tags.filter((e) => e !== name);
     this.form.get('tags')?.setValue(this.tags);
+  }
+
+  /*
+   * Get SubForm from entryType
+   */
+  getSubForm(entry: EntryType): SubFormModels[] {
+    switch (entry) {
+      case 'books':
+        return this.quotes.value as QuoteModel[];
+      case 'films':
+        return this.tracks.value as TrackModel[];
+      case 'albums':
+        return this.movieLines.value as MovieLineModel[];
+      default:
+        throw assureNever(entry);
+    }
   }
 }

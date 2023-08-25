@@ -1,3 +1,12 @@
+import {
+  AlbumModel,
+  BookModel,
+  FilmModel,
+  MovieLineModel,
+  QuoteModel,
+  TrackModel,
+} from './Models';
+
 /*
  *  TOAST
  */
@@ -17,3 +26,7 @@ export type EntryType = 'books' | 'films' | 'albums';
 export type ItemType = 'Livro' | 'Filme' | 'Album';
 
 export type SubItemType = 'quotes' | 'tracks' | 'movieLines';
+
+export type SubFormModels = QuoteModel | TrackModel | MovieLineModel;
+
+export type FormModels = BookModel | FilmModel | AlbumModel;

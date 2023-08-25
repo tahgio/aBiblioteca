@@ -4,6 +4,16 @@ import { DocumentData, DocumentReference } from '@angular/fire/firestore';
  * SHARED
  */
 
+interface FormCommonModel {
+  id?: string;
+  title: string;
+  cover: string;
+  genre: string;
+  rating: number;
+  tags: string[];
+  year: number;
+}
+
 interface SubEntryModel {
   _random?: number;
   _parent?: DocumentReference<DocumentData>;
@@ -20,20 +30,48 @@ export type BookStatusList =
   | 'Em Espera'
   | 'Abandonado';
 
-export interface BookModel {
+export interface BookModel extends FormCommonModel {
   pages: number;
-  rating: number;
-  genre: string;
-  title: string;
   author: string;
-  tags: string[];
   status: BookStatusList;
-  year: number;
-  cover: string;
-  id?: string;
 }
 
 export interface QuoteModel extends SubEntryModel {
   page: number;
   quote: string;
+}
+
+/*
+ * FILMS
+ */
+export type MovieStatusList = 'Visto' | 'Quero Ver' | 'Abandonado';
+
+export interface FilmModel extends FormCommonModel {
+  director: string;
+  writer: string;
+  storyline: string;
+  country: string;
+  runtime: string;
+  status: MovieStatusList;
+}
+
+export interface MovieLineModel extends SubEntryModel {
+  movieLine: string;
+}
+
+/*
+ * ALBUMS
+ */
+export interface AlbumModel extends FormCommonModel {
+  artist: string;
+  albumReview: {
+    reviewer: string;
+    review: string;
+  };
+}
+
+export interface TrackModel extends SubEntryModel {
+  trackName: string;
+  trackNumber: number;
+  time: string;
 }

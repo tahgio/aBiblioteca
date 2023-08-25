@@ -1,4 +1,14 @@
-<div [class]="'fixed flex  border-l-4 items-center flex drop-shadow-md bg-main text-detail rounded w-80 py-2 px-3 h-fit bottom-3 right-3 gap-4  ' + animation + ' border-' + type">
-  <ng-icon [class]="'text-3xl text-' + type" [name]="icon" ></ng-icon>
-  <p>{{message}}</p>
+<div
+  [class]="
+    'fixed flex  border-l-4 items-center drop-shadow-md bg-main text-detail rounded w-80 py-2 px-3 h-fit bottom-3 right-3 gap-4  ' +
+    animation +
+    ' border-' +
+    type
+  "
+>
+  <ng-icon
+    [class]="'text-3xl text-' + type"
+    [name]="icon ? icon : 'heroInformationCircle'"
+  ></ng-icon>
+  <p>{{ message }}</p>
 </div>
