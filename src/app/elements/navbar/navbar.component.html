@@ -1,6 +1,6 @@
 <div
   [ngClass]="isOpen ? 'h-screen min-h-1 w-60' : 'h-fit w-40 '"
-  class="fixed mx-4 flex flex-col items-center justify-between border-2 border-t-0 border-stroke bg-card shadow-md shadow-detail"
+  class="fixed mx-4 flex flex-col items-center justify-between border-t-0 bg-card shadow-md shadow-detail"
 >
   <div
     *ngIf="isOpen"
@@ -25,9 +25,24 @@
     <ul
       class="flex h-full flex-col items-start justify-around px-6 py-2 text-lg font-semibold text-highlight"
     >
-      <li class="w-full cursor-pointer hover:text-secondary" routerLink="/livros">Livros</li>
-      <li class="w-full cursor-pointer hover:text-secondary"routerLink="/filmes" >Filmes</li>
-      <li class="w-full cursor-pointer hover:text-secondary" routerLink="/albums">Albums</li>
+      <li
+        class="w-full cursor-pointer hover:text-secondary"
+        routerLink="/livros"
+      >
+        Livros
+      </li>
+      <li
+        class="w-full cursor-pointer hover:text-secondary"
+        routerLink="/filmes"
+      >
+        Filmes
+      </li>
+      <li
+        class="w-full cursor-pointer hover:text-secondary"
+        routerLink="/albums"
+      >
+        Albums
+      </li>
       <li
         class="w-full cursor-pointer hover:text-secondary"
         routerLink="/adicionar"

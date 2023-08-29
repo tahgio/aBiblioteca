@@ -47,15 +47,7 @@ export class AddFormComponent {
     private store: StoreService
   ) {
     // SUBCOLLECTION FORMS
-    this.quotesForm = this.fb.group({
-      quotes: this.fb.array([]),
-    });
-    this.linesForm = this.fb.group({
-      movieLines: this.fb.array([]),
-    });
-    this.tracksForm = this.fb.group({
-      tracks: this.fb.array([]),
-    });
+    this.initForms();
   }
 
   addSub(type: 'Livro' | 'Filme'): void;
@@ -121,7 +113,37 @@ export class AddFormComponent {
         throw err;
       });
     //Reset Form
+    this.resetForm();
+  }
+
+  /*
+   * Reset All Forms and all form states
+   */
+  private resetForm(): void {
+    // Reset form
     this.form.reset();
+    // Reset tags
+    this.tags = [];
+    // Reset all subForms And set it to initial state
+    this.quotes.reset();
+    this.movieLines.reset();
+    this.tracks.reset();
+    this.initForms();
+  }
+
+  /*
+   * Set forms to init state
+   */
+  private initForms() {
+    this.quotesForm = this.fb.group({
+      quotes: this.fb.array([]),
+    });
+    this.linesForm = this.fb.group({
+      movieLines: this.fb.array([]),
+    });
+    this.tracksForm = this.fb.group({
+      tracks: this.fb.array([]),
+    });
   }
 
   /*

@@ -1,3 +1,4 @@
+import { EntryType, SubItemType } from './Consts';
 import {
   AlbumModel,
   BookModel,
@@ -21,11 +22,11 @@ export type ToastIcons =
 /*
  *  STORE AND ADDFORM
  */
-export type EntryType = 'books' | 'films' | 'albums';
+export type EntryType = keyof typeof EntryType;
 
 export type ItemType = 'Livro' | 'Filme' | 'Album';
 
-export type SubItemType = 'quotes' | 'tracks' | 'movieLines';
+export type SubItemType = keyof typeof SubItemType;
 
 export type SubFormModels = QuoteModel | TrackModel | MovieLineModel;
 
