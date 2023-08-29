@@ -18,6 +18,7 @@ import {
 })
 export class StarRatingComponent implements ControlValueAccessor {
   @Input() mainForm!: FormGroup;
+  @Input() static!: number;
 
   onChange = (rating: number) => {};
   onTouched = () => {};
