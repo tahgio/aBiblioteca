@@ -19,7 +19,8 @@
     <ng-template [ngIf]="books$ | async" let-books>
       <ng-container *ngFor="let book of books">
         <div
-          class="relative flex h-64 flex-col items-center overflow-hidden rounded-xl transition-all hover:-translate-y-1 hover:shadow-md hover:shadow-detail"
+          class="relative flex h-64 cursor-pointer flex-col items-center overflow-hidden rounded-xl transition-all hover:-translate-y-1 hover:shadow-md hover:shadow-detail"
+          [routerLink]="['/livros', book['id']]"
         >
           <img
             class="z-0 h-5/6 w-full object-cover object-center"
@@ -47,12 +48,12 @@
               ></app-star-rating>
               <div>
                 <h2
-                  class="w-44 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-bold text-highlight"
+                  class="w-[calc(100%)] overflow-hidden text-ellipsis whitespace-nowrap text-lg font-bold text-highlight"
                 >
                   {{ book["title"] }}
                 </h2>
                 <h3
-                  class="w-44 overflow-hidden text-ellipsis whitespace-nowrap text-base italic text-secondary"
+                  class="w-[calc(100%)] overflow-hidden text-ellipsis whitespace-nowrap text-base italic text-secondary"
                 >
                   {{ book["author"] }}
                 </h3>

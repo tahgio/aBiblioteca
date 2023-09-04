@@ -22,19 +22,44 @@ export const ItemType = {
   Album: 'Album',
 } as const;
 
+export const PathType = {
+  livros: 'livros',
+  filmes: 'filmes',
+  albums: 'albums',
+} as const;
+
+export const ToastTypes = {
+  success: 'success',
+  warning: 'warning',
+  error: 'error',
+  info: 'info',
+} as const;
+
+export const AppState = {
+  stable: 'stable',
+  error: 'error',
+  loading: 'loading',
+} as const;
+
 /*
  * CONVERTERS
  */
 export const itemConverter = {
-  Livro: 'books',
-  Filme: 'films',
-  Album: 'albums',
+  Livro: EntryType.books,
+  Filme: EntryType.films,
+  Album: EntryType.albums,
 } as const;
 
 export const subItemGetter = {
-  books: 'quotes',
-  films: 'movieLines',
-  albums: 'tracks',
+  books: SubItemType.quotes,
+  films: SubItemType.movieLines,
+  albums: SubItemType.tracks,
+} as const;
+
+export const pathConverter = {
+  livros: EntryType.books,
+  filmes: EntryType.films,
+  albums: EntryType.albums,
 } as const;
 
 /*

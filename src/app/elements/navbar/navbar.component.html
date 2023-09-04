@@ -1,9 +1,10 @@
 <div
   [ngClass]="isOpen ? 'h-screen min-h-1 w-60' : 'h-fit w-40 '"
-  class="fixed mx-4 flex flex-col items-center justify-between border-t-0 bg-card shadow-md shadow-detail"
+  class="fixed mx-4 flex flex-col items-center justify-between border-t-0 bg-card shadow-md shadow-detail transition-all duration-300"
 >
   <div
     *ngIf="isOpen"
+    [ngClass]="!isOpen ? 'animate-slowFadeOut' : 'animate-slowFadeIn'"
     class="50 flex h-fit w-10/12 flex-col items-center justify-between border-b-2 border-b-detail px-2 pt-6"
   >
     <div class="flex h-1/2 items-center">
@@ -21,7 +22,11 @@
       </h1>
     </div>
   </div>
-  <nav class="h-96 w-full" *ngIf="isOpen">
+  <nav
+    [ngClass]="!isOpen ? 'animate-slowFadeOut' : 'animate-slowFadeIn'"
+    class="h-96 w-full"
+    *ngIf="isOpen"
+  >
     <ul
       class="flex h-full flex-col items-start justify-around px-6 py-2 text-lg font-semibold text-highlight"
     >

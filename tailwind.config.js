@@ -3,8 +3,9 @@ module.exports = {
   content: ["./src/**/*.{html,ts}"],
   safelist: [
     {
-      pattern: /(text|border)-(success|error|warning|info)/
-    }  ],
+      pattern: /(text|border)-(success|error|warning|info)/,
+    },
+  ],
   theme: {
     extend: {
       colors: {
@@ -18,7 +19,7 @@ module.exports = {
         success: "#229941",
         error: "#e30707",
         warning: "#e36e07",
-        info: "#88898a"
+        info: "#88898a",
       },
       fontFamily: {
         sans: ["Hanken Grotesk", "sans-serif"],
@@ -31,21 +32,23 @@ module.exports = {
         128: "38rem",
       },
       animation: {
-        'fadeIn': 'fadeIn 200ms ease-in forwards',
-        'fadeOut': 'fadeOut 200ms ease-in forwards',
+        fadeIn: "fadeIn 200ms ease-in forwards",
+        fadeOut: "fadeOut 200ms ease-in forwards",
+        slowFadeIn: "fadeIn 700ms ease-in forwards",
+        slowFadeOut: "fadeOut 700ms ease-in forwards",
       },
       keyframes: {
         fadeIn: {
-          '0%': { opacity: '0', transform: "scale(0.9)" },
-          '80%': {transform: 'scale(1.05)'},
-          '100%': { opacity: '1', transform: 'scale(1)' },
+          "0%": { opacity: "0", transform: "scale(0.9)" },
+          "80%": { transform: "scale(1.05)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
         },
         fadeOut: {
-          '0%': { opacity: '1', transform: "scale(1)" },
-          '90%': {transform: 'scale(0.9)'},
-          '100%': { opacity: '0' },
-        }
-      }
+          "0%": { opacity: "1", transform: "scale(1)" },
+          "90%": { transform: "scale(0.9)" },
+          "100%": { opacity: "0" },
+        },
+      },
     },
   },
   plugins: [],
