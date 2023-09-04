@@ -14,10 +14,12 @@ import {
   limit,
   orderBy,
   doc,
+  serverTimestamp,
+  getDoc,
 } from '@angular/fire/firestore';
 import { EntryType, FormModels, SubFormModels } from '../../types/Unions';
-import { first, map, mergeAll } from 'rxjs';
-import { getSubItemType } from '../../types/Methods';
+import { Observable, first, from, map, mergeAll } from 'rxjs';
+import { Nullable, getSubItemType } from '../../types/Methods';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({
@@ -26,13 +28,15 @@ import { FormGroup } from '@angular/forms';
 export class StoreService {
   constructor(private firestore: Firestore) {}
 
-  //Collection
+  /*
+   * Collection
+   */
+  //-- Load Collection
   loadCollection(entry: EntryType) {
     const instance = collection(this.firestore, entry);
     return collectionData(instance, { idField: 'id' });
   }
-
-  // -- Add Form main method
+  //-- Add Form main method
   async addToCollection(
     entry: EntryType,
     objtoAdd: FormModels,
@@ -45,8 +49,13 @@ export class StoreService {
     }
     // Init
     const instance = collection(this.firestore, entry);
+    const objWithTimeStamp: FormModels = {
+      ...objtoAdd,
+      _addedAt: serverTimestamp(),
+      _lastModified: serverTimestamp(),
+    };
     // Add to collection and to subSelection
-    const res = await addDoc(instance, objtoAdd);
+    const res = await addDoc(instance, objWithTimeStamp);
     const subInstance = collection(
       this.firestore,
       res.path,
@@ -66,45 +75,33 @@ export class StoreService {
     });
   }
 
-  //SubCollection
-  loadSub(entry: EntryType, id: string): DocumentData {
-    const instance = collection(
-      this.firestore,
-      entry,
-      id,
-      getSubItemType(entry)
-    );
-    return collectionData(instance);
-  }
-
-  getLastRandomNumber(field: 'quotes' | 'tracks' | 'movieLines') {
-    // Init converter
-    const randomNumberConverter = {
+  //-- Get Only tags from a Collection
+  async getAllTags(entry: EntryType): Promise<string[]> {
+    let tagArray: string[] = [];
+    const qConverter = {
       toFirestore: () => ({}),
       fromFirestore: (
         snapshot: QueryDocumentSnapshot,
         options: SnapshotOptions
       ) => {
         const data = snapshot.data(options);
-        return data['_random'] as number;
+        return data['tags'];
       },
     };
-    // Create an observable
-    const lastNumber$ = collectionData(
-      query(
-        collectionGroup(this.firestore, field),
-        orderBy('_random', 'desc'),
-        limit(1)
-      ).withConverter(randomNumberConverter)
+    const instance = collection(this.firestore, entry);
+    const q = query(instance, where('tags', '!=', [])).withConverter(
+      qConverter
     );
-    // Return observable mapped getting only the first result and unsubscribing
-    return lastNumber$.pipe(
-      first(),
-      map((n) => n[0])
-    );
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      tagArray = [...tagArray, ...data];
+    });
+    return Array.from(new Set(tagArray.flat()));
   }
 
-  //Collection group
+  //-- Collection group
   loadRandomDocFromSub(field: 'quotes' | 'tracks' | 'movieLines') {
     const randomNumberConverter = {
       toFirestore: () => ({}),
@@ -138,29 +135,65 @@ export class StoreService {
     );
   }
 
-  //Get Only tags from a Collection
-  async getAllTags(entry: EntryType): Promise<string[]> {
-    let tagArray: string[] = [];
-    const qConverter = {
+  /*
+   * SubCollection
+   */
+  //-- Load SubCollection
+  loadSub(entry: EntryType, id: string): DocumentData {
+    const instance = collection(
+      this.firestore,
+      entry,
+      id,
+      getSubItemType(entry)
+    );
+    return collectionData(instance);
+  }
+
+  /*
+   * Item
+   */
+  // Load item from entry using key
+  loadItem(entry: EntryType, key: string): Observable<Nullable<FormModels>> {
+    const instance = doc(this.firestore, entry, key);
+    console.log({ entry, key });
+    return from(getDoc(instance)).pipe(
+      map((el) => {
+        if (el.exists()) {
+          return el.data() as FormModels;
+        } else {
+          throw new Error('Data not found');
+        }
+      })
+    );
+  }
+
+  /*
+   * Utils
+   */
+  private getLastRandomNumber(field: 'quotes' | 'tracks' | 'movieLines') {
+    // Init converter
+    const randomNumberConverter = {
       toFirestore: () => ({}),
       fromFirestore: (
         snapshot: QueryDocumentSnapshot,
         options: SnapshotOptions
       ) => {
         const data = snapshot.data(options);
-        return data['tags'];
+        return data['_random'] as number;
       },
     };
-    const instance = collection(this.firestore, entry);
-    const q = query(instance, where('tags', '!=', [])).withConverter(
-      qConverter
+    // Create an observable
+    const lastNumber$ = collectionData(
+      query(
+        collectionGroup(this.firestore, field),
+        orderBy('_random', 'desc'),
+        limit(1)
+      ).withConverter(randomNumberConverter)
     );
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      tagArray = [...tagArray, ...data];
-    });
-    return Array.from(new Set(tagArray.flat()));
+    // Return observable mapped getting only the first result and unsubscribing
+    return lastNumber$.pipe(
+      first(),
+      map((n) => n[0])
+    );
   }
 }

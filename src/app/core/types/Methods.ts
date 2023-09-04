@@ -1,5 +1,10 @@
-import { itemConverter, subItemGetter } from './Consts';
-import { EntryType, ItemType, SubItemType } from './Unions';
+import {
+  PathType as PathTypeEnum,
+  itemConverter,
+  pathConverter,
+  subItemGetter,
+} from './Consts';
+import { EntryType, ItemType, PathType, SubItemType } from './Unions';
 /*
  *  TYPE FUNCTIONS
  */
@@ -22,11 +27,17 @@ export type UnionToArray<T, A extends unknown[] = []> = IsUnion<T> extends true
   ? UnionToArray<Exclude<T, PopUnion<T>>, [PopUnion<T>, ...A]>
   : [T, ...A];
 
+export type Nullable<T> = T | null;
+
 /*
  *  ASSERTION AND CHECKING FUNCTIONS
  */
 export function isString(value: unknown): asserts value is string {
   if (typeof value !== 'string') throw new Error('Not a string');
+}
+
+export function isPathType(value: unknown): value is PathType {
+  return typeof value === 'string' && value in PathTypeEnum;
 }
 
 export function assureNever(value: never): Error {
@@ -36,7 +47,11 @@ export function assureNever(value: never): Error {
 /*
  *  CONVERSION FUNCTIONS
  */
-export function convertToEntrytype(item: ItemType): EntryType {
+export function convertPathToEntry(item: PathType): EntryType {
+  return pathConverter[item as keyof typeof pathConverter];
+}
+
+export function convertItemToEntry(item: ItemType): EntryType {
   return itemConverter[item as keyof typeof itemConverter];
 }
 

@@ -1,10 +1,16 @@
-import { DocumentData, DocumentReference } from '@angular/fire/firestore';
+import {
+  DocumentData,
+  DocumentReference,
+  FieldValue,
+} from '@angular/fire/firestore';
 
 /*
  * SHARED
  */
 
 interface FormCommonModel {
+  _addedAt?: FieldValue;
+  _lastModified?: FieldValue;
   id?: string;
   title: string;
   cover: string;

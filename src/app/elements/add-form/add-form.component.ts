@@ -2,7 +2,8 @@ import { Component, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'src/app/core/services/message/message.service';
 import { StoreService } from 'src/app/core/services/store/store.service';
-import { assureNever, convertToEntrytype } from 'src/app/core/types/Methods';
+import { ToastTypes } from 'src/app/core/types/Consts';
+import { assureNever, convertItemToEntry } from 'src/app/core/types/Methods';
 import {
   MovieLineModel,
   QuoteModel,
@@ -93,21 +94,21 @@ export class AddFormComponent {
    */
   submitForm(formValue: FormModels): void {
     // Init
-    const entry = convertToEntrytype(this.itemType);
+    const entry = convertItemToEntry(this.itemType);
     // Call service that adds entry to db
     this.store
       .addToCollection(entry, formValue, this.getSubForm(entry), this.form)
       // Show success toast if everything ok
       .then(() => {
         this.msg.showToast(
-          'success',
+          ToastTypes.success,
           `Seu ${this.itemType} foi adicionado com sucesso!`
         );
       })
       // Throw error if not
       .catch((err: Error) => {
         this.msg.showToast(
-          'error',
+          ToastTypes.error,
           `Ocorreu um erro ao tentar adicionar o ${this.itemType} à base de dados`
         );
         throw err;

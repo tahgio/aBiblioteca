@@ -1,4 +1,11 @@
-import { EntryType, SubItemType } from './Consts';
+import {
+  AppState,
+  EntryType,
+  ItemType,
+  PathType,
+  SubItemType,
+  ToastTypes,
+} from './Consts';
 import {
   AlbumModel,
   BookModel,
@@ -11,7 +18,7 @@ import {
 /*
  *  TOAST
  */
-export type ToastTypes = 'success' | 'warning' | 'error' | 'info';
+export type ToastTypes = keyof typeof ToastTypes;
 
 export type ToastIcons =
   | 'heroCheckCircle'
@@ -24,9 +31,13 @@ export type ToastIcons =
  */
 export type EntryType = keyof typeof EntryType;
 
-export type ItemType = 'Livro' | 'Filme' | 'Album';
+export type PathType = keyof typeof PathType;
+
+export type ItemType = keyof typeof ItemType;
 
 export type SubItemType = keyof typeof SubItemType;
+
+export type AppState = keyof typeof AppState;
 
 export type SubFormModels = QuoteModel | TrackModel | MovieLineModel;
 
