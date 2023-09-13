@@ -55,10 +55,10 @@ export class SingleComponent implements OnInit {
         this.singleItem$ = this.store.loadItem(this.entry, itemId).pipe(
           map((el) => {
             // Prepare and convert timestamp to dates
+            this.addedAt = el?._addedAt ? el._addedAt.toDate() : null;
             this.lastModified = el?._lastModified
               ? el._lastModified.toDate()
               : null;
-            this.addedAt = el?._addedAt ? el._addedAt.toDate() : null;
 
             return el;
           }),

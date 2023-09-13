@@ -156,7 +156,6 @@ export class StoreService {
   // Load item from entry using key
   loadItem(entry: EntryType, key: string): Observable<Nullable<FormModels>> {
     const instance = doc(this.firestore, entry, key);
-    console.log({ entry, key });
     return from(getDoc(instance)).pipe(
       map((el) => {
         if (el.exists()) {

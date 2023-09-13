@@ -1,11 +1,13 @@
+/// <reference types="@angular/localize" />
+
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import localeBr from '@angular/common/locales/br';
+import localePt from '@angular/common/locales/pt';
 import { LOCALE_ID } from '@angular/core';
 
 import { AppModule } from './app/app.module';
 import { registerLocaleData } from '@angular/common';
 
-registerLocaleData(localeBr, 'br');
+registerLocaleData(localePt, 'br');
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule, {

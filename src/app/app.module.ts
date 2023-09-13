@@ -25,6 +25,10 @@ import {
   heroExclamationCircle,
   heroExclamationTriangle,
 } from '@ng-icons/heroicons/outline';
+import {
+  heroPlusCircleMini,
+  heroPencilSquareMini,
+} from '@ng-icons/heroicons/mini';
 import { AdicionarComponent } from './pages/adicionar/adicionar.component';
 import { StarRatingComponent } from './elements/star-rating/star-rating.component';
 import { AddFormComponent } from './elements/add-form/add-form.component';
@@ -79,6 +83,8 @@ import { AsPipe } from './core/pipes/as.pipe';
       heroPencilSquareSolid,
       heroBookOpenSolid,
       heroFilmSolid,
+      heroPlusCircleMini,
+      heroPencilSquareMini,
     }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),

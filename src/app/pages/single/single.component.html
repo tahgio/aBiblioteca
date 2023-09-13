@@ -3,7 +3,7 @@
   <!-- ### Card ## -->
   <!-- ############ -->
   <div
-    class="flex h-fit flex-col items-end"
+    class="flex h-fit flex-col gap-1"
     *ngIf="singleItem$ | async as item; else loadingOrError"
   >
     <div class="flex h-80 w-full gap-3 rounded bg-card shadow-sm shadow-detail">
@@ -69,13 +69,20 @@
         </div>
       </div>
     </div>
-    <div class="flex gap-3">
-      <h4 class="text-base font-light text-highlight">
-        {{ addedAt | date : "d/MMMM/y,h:mm:ss" }}
-      </h4>
-      <h4 class="text-base font-light text-highlight">
-        {{ lastModified | date : "d/m/y,h:mm:ss" }}
-      </h4>
+    <div class="flex h-fit w-full justify-between">
+      <span class="flex items-center gap-1 text-base font-light text-highlight">
+        <ng-icon class="text-base" name="heroPlusCircleMini"></ng-icon>
+        <span class="font-medium text-highlight">Adicionado em:</span
+        >{{ addedAt | date : "d/MMMM/y 'às' h'h'mm'm'" }}
+      </span>
+      <span
+        *ngIf="lastModified"
+        class="flex items-center gap-1 text-base font-light text-highlight"
+      >
+        <ng-icon class="text-base" name="heroPencilSquareMini"></ng-icon>
+        <span class="font-medium text-highlight">Última modificação em:</span
+        >{{ lastModified | date : "d/MMMM/y 'às' h'h'mm'm'" }}
+      </span>
     </div>
   </div>
 
