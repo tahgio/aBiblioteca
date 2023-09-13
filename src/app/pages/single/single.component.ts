@@ -5,8 +5,13 @@ import { Observable, catchError, first, map } from 'rxjs';
 import { MessageService } from 'src/app/core/services/message/message.service';
 import { StoreService } from 'src/app/core/services/store/store.service';
 import { AppState, ToastTypes } from 'src/app/core/types/Consts';
-import { convertPathToEntry, isPathType } from 'src/app/core/types/Methods';
-import { FormModels } from 'src/app/core/types/Unions';
+import {
+  Nullable,
+  convertPathToEntry,
+  isPathType,
+} from 'src/app/core/types/Methods';
+import { AlbumModel, BookModel, FilmModel } from 'src/app/core/types/Models';
+import { EntryType, FormModels } from 'src/app/core/types/Unions';
 
 @Component({
   selector: 'app-single',
@@ -14,8 +19,17 @@ import { FormModels } from 'src/app/core/types/Unions';
 })
 export class SingleComponent implements OnInit {
   // Init
-  singleItem$!: Observable<FormModels | null>;
+  // -- Types for assertion on template
+  AlbumModel!: AlbumModel;
+  FilmModel!: FilmModel;
+  BookModel!: BookModel;
+  // -- Observables
+  singleItem$!: Observable<Nullable<FormModels>>;
+  // -- Variables
+  entry!: EntryType;
   appState: 'stable' | 'error' | 'loading' = 'stable';
+  addedAt!: Nullable<Date>;
+  lastModified!: Nullable<Date>;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,8 +51,17 @@ export class SingleComponent implements OnInit {
       const path = segment[0].path;
       // Check if path is a valid key
       if (isPathType(path)) {
-        const entry = convertPathToEntry(path);
-        this.singleItem$ = this.store.loadItem(entry, itemId).pipe(
+        this.entry = convertPathToEntry(path);
+        this.singleItem$ = this.store.loadItem(this.entry, itemId).pipe(
+          map((el) => {
+            // Prepare and convert timestamp to dates
+            this.lastModified = el?._lastModified
+              ? el._lastModified.toDate()
+              : null;
+            this.addedAt = el?._addedAt ? el._addedAt.toDate() : null;
+
+            return el;
+          }),
           catchError((e: Error) => {
             this.appState = AppState.error;
             this.msg.showToast(

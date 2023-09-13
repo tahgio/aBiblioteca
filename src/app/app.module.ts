@@ -15,6 +15,8 @@ import {
   heroPlusCircleSolid,
   heroFolderPlusSolid,
   heroPencilSquareSolid,
+  heroBookOpenSolid,
+  heroFilmSolid,
 } from '@ng-icons/heroicons/solid';
 import {
   heroStar,
@@ -38,6 +40,7 @@ import { AlbumsComponent } from './pages/albums/albums.component';
 import { HoverInfoDirective } from './core/directives/hover-info/hover-info.directive';
 import { TagPipe } from './core/pipes/tag.pipe';
 import { SingleComponent } from './pages/single/single.component';
+import { AsPipe } from './core/pipes/as.pipe';
 
 @NgModule({
   declarations: [
@@ -54,6 +57,7 @@ import { SingleComponent } from './pages/single/single.component';
     HoverInfoDirective,
     TagPipe,
     SingleComponent,
+    AsPipe,
   ],
   imports: [
     BrowserModule,
@@ -73,6 +77,8 @@ import { SingleComponent } from './pages/single/single.component';
       heroExclamationTriangle,
       heroFolderPlusSolid,
       heroPencilSquareSolid,
+      heroBookOpenSolid,
+      heroFilmSolid,
     }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),

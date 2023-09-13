@@ -16,6 +16,7 @@ import {
   doc,
   serverTimestamp,
   getDoc,
+  Timestamp,
 } from '@angular/fire/firestore';
 import { EntryType, FormModels, SubFormModels } from '../../types/Unions';
 import { Observable, first, from, map, mergeAll } from 'rxjs';
@@ -51,8 +52,8 @@ export class StoreService {
     const instance = collection(this.firestore, entry);
     const objWithTimeStamp: FormModels = {
       ...objtoAdd,
-      _addedAt: serverTimestamp(),
-      _lastModified: serverTimestamp(),
+      _addedAt: serverTimestamp() as Timestamp,
+      _lastModified: undefined,
     };
     // Add to collection and to subSelection
     const res = await addDoc(instance, objWithTimeStamp);

@@ -1,7 +1,87 @@
 <div>
-  <div *ngIf="singleItem$ | async as item; else loadingOrError">
-    <p>First name: {{ item.title }}</p>
+  <!-- ############ -->
+  <!-- ### Card ## -->
+  <!-- ############ -->
+  <div
+    class="flex h-fit flex-col items-end"
+    *ngIf="singleItem$ | async as item; else loadingOrError"
+  >
+    <div class="flex h-80 w-full gap-3 rounded bg-card shadow-sm shadow-detail">
+      <div class="h-full w-1/4">
+        <img
+          class="h-full w-full rounded-l object-cover object-center"
+          [src]="item.cover"
+        />
+      </div>
+      <div class="flex flex-col gap-3 p-3">
+        <div class="flex items-center gap-3">
+          <app-star-rating class="h-6" [static]="item.rating"></app-star-rating>
+          <div
+            class="flex items-center gap-3 rounded border-highlight px-2 py-1 shadow-sm shadow-detail"
+            *ngIf="!(entry === 'albums')"
+          >
+            <ng-icon
+              class="text-xl text-highlight"
+              [name]="entry === 'films' ? 'heroFilmSolid' : 'heroBookOpenSolid'"
+            ></ng-icon>
+            <h3 class="text-xl font-normal text-highlight">
+              {{ (item | as : BookModel : FilmModel).status }}
+            </h3>
+          </div>
+        </div>
+        <h1 class="text-5xl font-extrabold text-secondary">
+          {{ item.title }}
+        </h1>
+        <div class="flex flex-col">
+          <h2 class="text-2xl font-semibold text-highlight">
+            {{
+              entry === "albums"
+                ? (item | as : AlbumModel).artist
+                : entry === "books"
+                ? (item | as : BookModel).author
+                : entry === "films"
+                ? (item | as : FilmModel).director
+                : null
+            }}
+          </h2>
+          <h3 class="text-xl font-normal text-highlight">
+            {{ item.genre }} | {{ item.year }} |
+            {{
+              entry === "albums"
+                ? (item | as : AlbumModel).artist
+                : entry === "books"
+                ? (item | as : BookModel).pages + " pgs"
+                : entry === "films"
+                ? (item | as : FilmModel).runtime
+                : null
+            }}
+          </h3>
+        </div>
+        <div>
+          <div class="flex h-fit w-full flex-wrap items-end gap-x-px gap-y-1">
+            <span
+              *ngFor="let tag of item['tags'].sort()"
+              class="mr-1 cursor-default rounded-sm bg-secondary px-2 py-1 text-center text-lg font-semibold leading-none text-card opacity-80 transition-all hover:-translate-y-1 hover:shadow-sm hover:shadow-detail"
+            >
+              {{ tag }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-3">
+      <h4 class="text-base font-light text-highlight">
+        {{ addedAt | date : "d/MMMM/y,h:mm:ss" }}
+      </h4>
+      <h4 class="text-base font-light text-highlight">
+        {{ lastModified | date : "d/m/y,h:mm:ss" }}
+      </h4>
+    </div>
   </div>
+
+  <!-- ############ -->
+  <!-- ### Erro ## -->
+  <!-- ############ -->
   <ng-template #loadingOrError>
     <div
       *ngIf="appState === 'error'"
@@ -11,7 +91,7 @@
       <div class="flex flex-col justify-center">
         <h1 class="text-5xl font-extrabold text-secondary">OOOPS!</h1>
         <h2 class="text-2xl font-semibold text-highlight">
-          Não foi encontrado nenhum item na biblioteca.
+          O item especificado não foi encontrado na Biblioteca.
         </h2>
       </div>
     </div>

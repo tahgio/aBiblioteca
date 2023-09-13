@@ -1,6 +1,3 @@
-import { UnionToArray } from './Methods';
-import { BookStatusList, MovieStatusList } from './Models';
-
 /*
  * ENUMS
  */
@@ -65,16 +62,12 @@ export const pathConverter = {
 /*
  * CONSTANTS
  */
-export const bookStatusList: UnionToArray<BookStatusList> = [
+export const bookStatusList = [
   'Lido',
   'Lendo',
   'Quero Ler',
   'Em Espera',
   'Abandonado',
-];
+] as const;
 
-export const filmStatusList: UnionToArray<MovieStatusList> = [
-  'Abandonado',
-  'Visto',
-  'Quero Ver',
-];
+export const filmStatusList = ['Abandonado', 'Visto', 'Quero Ver'] as const;

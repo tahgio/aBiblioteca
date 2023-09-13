@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BookStatusList, MovieStatusList } from 'src/app/core/types/Models';
 import { UnionToArray } from 'src/app/core/types/Methods';
 import { inArrayValidator } from 'src/app/core/validators/inArrayValidator';
 import { ItemType } from 'src/app/core/types/Unions';
