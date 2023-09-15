@@ -38,6 +38,14 @@ export const AppState = {
   loading: 'loading',
 } as const;
 
+export const Colors = {
+  secondary: 'secondary',
+  card: 'card',
+  main: 'main',
+  highlight: 'highlight',
+  detail: 'detail',
+} as const;
+
 /*
  * CONVERTERS
  */
@@ -69,5 +77,12 @@ export const bookStatusList = [
   'Em Espera',
   'Abandonado',
 ] as const;
+
+export const MESSAGE_ICONS = {
+  success: 'heroCheckCircle',
+  info: 'heroInformationCircle',
+  warning: 'heroExclamationTriangle',
+  error: 'heroExclamationCircle',
+} as const;
 
 export const filmStatusList = ['Abandonado', 'Visto', 'Quero Ver'] as const;

@@ -76,4 +76,11 @@ export class SingleComponent implements OnInit {
       }
     });
   }
+
+  onEdit() {
+    this.msg.showToast(
+      'warning',
+      'Esta funcionalidade ainda não foi implementada'
+    );
+  }
 }

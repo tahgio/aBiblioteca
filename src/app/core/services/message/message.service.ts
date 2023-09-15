@@ -7,18 +7,14 @@ import {
 } from '@angular/core';
 import { ToastComponent } from 'src/app/elements/toast/toast.component';
 import { ToastTypes } from '../../types/Unions';
+import { Nullable } from '../../types/Methods';
+import { MESSAGE_ICONS } from '../../types/Consts';
 
-const MESSAGE_ICONS = {
-  success: 'heroCheckCircle' as const,
-  info: 'heroInformationCircle' as const,
-  warning: 'heroExclamationTriangle' as const,
-  error: 'heroExclamationCircle' as const,
-};
 @Injectable({
   providedIn: 'root',
 })
 export class MessageService {
-  private toastRef!: ComponentRef<ToastComponent> | null;
+  private toastRef!: Nullable<ComponentRef<ToastComponent>>;
 
   constructor(private appRef: ApplicationRef) {}
 

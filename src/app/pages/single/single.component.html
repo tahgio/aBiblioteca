@@ -6,12 +6,30 @@
     class="flex h-fit flex-col gap-1"
     *ngIf="singleItem$ | async as item; else loadingOrError"
   >
-    <div class="flex h-80 w-full gap-3 rounded bg-card shadow-sm shadow-detail">
+    <div
+      class="relative flex h-80 w-full gap-3 rounded bg-card shadow-sm shadow-detail"
+    >
       <div class="h-full w-1/4">
         <img
           class="h-full w-full rounded-l object-cover object-center"
           [src]="item.cover"
         />
+        <div
+          class="absolute bottom-3 left-3 h-fit w-fit p-px"
+          tooltip="Clique para editar o item"
+          color="card"
+          [border]="true"
+        >
+          <div
+            class="hover-basic flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-secondary bg-main"
+            (click)="onEdit()"
+          >
+            <ng-icon
+              class="text-xs text-secondary"
+              name="heroPencilMini"
+            ></ng-icon>
+          </div>
+        </div>
       </div>
       <div class="flex flex-col gap-3 p-3">
         <div class="flex items-center gap-3">
@@ -61,7 +79,7 @@
           <div class="flex h-fit w-full flex-wrap items-end gap-x-px gap-y-1">
             <span
               *ngFor="let tag of item['tags'].sort()"
-              class="mr-1 cursor-default rounded-sm bg-secondary px-2 py-1 text-center text-lg font-semibold leading-none text-card opacity-80 transition-all hover:-translate-y-1 hover:shadow-sm hover:shadow-detail"
+              class="hover-basic mr-1 cursor-default rounded-sm bg-secondary px-2 py-1 text-center text-lg font-semibold leading-none text-card opacity-80"
             >
               {{ tag }}
             </span>
