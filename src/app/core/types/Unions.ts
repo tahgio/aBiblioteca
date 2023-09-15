@@ -1,5 +1,6 @@
 import {
   AppState,
+  Colors,
   EntryType,
   ItemType,
   PathType,
@@ -38,6 +39,8 @@ export type ItemType = keyof typeof ItemType;
 export type SubItemType = keyof typeof SubItemType;
 
 export type AppState = keyof typeof AppState;
+
+export type Colors = keyof typeof Colors;
 
 export type SubFormModels = QuoteModel | TrackModel | MovieLineModel;
 

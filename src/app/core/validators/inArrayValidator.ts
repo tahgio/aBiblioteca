@@ -1,6 +1,6 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 
-export function inArrayValidator(array: any[]): ValidatorFn {
+export function inArrayValidator(array: readonly any[]): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const inputValue = control.value;
     if (array.includes(inputValue)) {

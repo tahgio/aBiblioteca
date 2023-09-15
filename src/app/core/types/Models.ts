@@ -2,15 +2,18 @@ import {
   DocumentData,
   DocumentReference,
   FieldValue,
+  Timestamp,
 } from '@angular/fire/firestore';
+import { bookStatusList, filmStatusList } from './Consts';
+import { TupleToUnion } from './Methods';
 
 /*
  * SHARED
  */
 
 interface FormCommonModel {
-  _addedAt?: FieldValue;
-  _lastModified?: FieldValue;
+  _addedAt?: Timestamp;
+  _lastModified?: Timestamp;
   id?: string;
   title: string;
   cover: string;
@@ -29,12 +32,7 @@ interface SubEntryModel {
 /*
  * BOOKS
  */
-export type BookStatusList =
-  | 'Lido'
-  | 'Lendo'
-  | 'Quero Ler'
-  | 'Em Espera'
-  | 'Abandonado';
+export type BookStatusList = TupleToUnion<typeof bookStatusList>;
 
 export interface BookModel extends FormCommonModel {
   pages: number;
@@ -50,7 +48,7 @@ export interface QuoteModel extends SubEntryModel {
 /*
  * FILMS
  */
-export type MovieStatusList = 'Visto' | 'Quero Ver' | 'Abandonado';
+export type MovieStatusList = TupleToUnion<typeof filmStatusList>;
 
 export interface FilmModel extends FormCommonModel {
   director: string;

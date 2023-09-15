@@ -4,7 +4,15 @@ import {
   pathConverter,
   subItemGetter,
 } from './Consts';
-import { EntryType, ItemType, PathType, SubItemType } from './Unions';
+import { AlbumModel, BookModel, FilmModel } from './Models';
+import {
+  EntryType,
+  FormModels,
+  ItemType,
+  PathType,
+  SubItemType,
+} from './Unions';
+import { EntryType as EntryTypeEnum } from './Consts';
 /*
  *  TYPE FUNCTIONS
  */
@@ -28,6 +36,16 @@ export type UnionToArray<T, A extends unknown[] = []> = IsUnion<T> extends true
   : [T, ...A];
 
 export type Nullable<T> = T | null;
+
+export type TupleToUnion<T extends readonly any[]> = T[number];
+
+export type EntryToModels<T extends EntryType> = T extends 'albums'
+  ? AlbumModel
+  : T extends typeof EntryTypeEnum.books
+  ? BookModel
+  : T extends typeof EntryTypeEnum.films
+  ? FilmModel
+  : never;
 
 /*
  *  ASSERTION AND CHECKING FUNCTIONS

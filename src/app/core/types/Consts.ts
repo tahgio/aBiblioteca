@@ -1,6 +1,3 @@
-import { UnionToArray } from './Methods';
-import { BookStatusList, MovieStatusList } from './Models';
-
 /*
  * ENUMS
  */
@@ -41,6 +38,14 @@ export const AppState = {
   loading: 'loading',
 } as const;
 
+export const Colors = {
+  secondary: 'secondary',
+  card: 'card',
+  main: 'main',
+  highlight: 'highlight',
+  detail: 'detail',
+} as const;
+
 /*
  * CONVERTERS
  */
@@ -65,16 +70,19 @@ export const pathConverter = {
 /*
  * CONSTANTS
  */
-export const bookStatusList: UnionToArray<BookStatusList> = [
+export const bookStatusList = [
   'Lido',
   'Lendo',
   'Quero Ler',
   'Em Espera',
   'Abandonado',
-];
+] as const;
 
-export const filmStatusList: UnionToArray<MovieStatusList> = [
-  'Abandonado',
-  'Visto',
-  'Quero Ver',
-];
+export const MESSAGE_ICONS = {
+  success: 'heroCheckCircle',
+  info: 'heroInformationCircle',
+  warning: 'heroExclamationTriangle',
+  error: 'heroExclamationCircle',
+} as const;
+
+export const filmStatusList = ['Abandonado', 'Visto', 'Quero Ver'] as const;

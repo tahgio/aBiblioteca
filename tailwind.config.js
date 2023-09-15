@@ -3,7 +3,8 @@ module.exports = {
   content: ["./src/**/*.{html,ts}"],
   safelist: [
     {
-      pattern: /(text|border)-(success|error|warning|info)/,
+      pattern:
+        /(text|border|bg)-(success|error|warning|info|main|card|highlight|stroke|detail|secondary|tertiary)/,
     },
   ],
   theme: {

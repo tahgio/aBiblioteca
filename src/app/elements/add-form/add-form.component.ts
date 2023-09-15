@@ -179,9 +179,9 @@ export class AddFormComponent {
     switch (entry) {
       case 'books':
         return this.quotes.value as QuoteModel[];
-      case 'films':
-        return this.tracks.value as TrackModel[];
       case 'albums':
+        return this.tracks.value as TrackModel[];
+      case 'films':
         return this.movieLines.value as MovieLineModel[];
       default:
         throw assureNever(entry);

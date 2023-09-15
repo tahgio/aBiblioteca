@@ -15,6 +15,8 @@ import {
   heroPlusCircleSolid,
   heroFolderPlusSolid,
   heroPencilSquareSolid,
+  heroBookOpenSolid,
+  heroFilmSolid,
 } from '@ng-icons/heroicons/solid';
 import {
   heroStar,
@@ -23,6 +25,11 @@ import {
   heroExclamationCircle,
   heroExclamationTriangle,
 } from '@ng-icons/heroicons/outline';
+import {
+  heroPlusCircleMini,
+  heroPencilSquareMini,
+  heroPencilMini,
+} from '@ng-icons/heroicons/mini';
 import { AdicionarComponent } from './pages/adicionar/adicionar.component';
 import { StarRatingComponent } from './elements/star-rating/star-rating.component';
 import { AddFormComponent } from './elements/add-form/add-form.component';
@@ -38,6 +45,9 @@ import { AlbumsComponent } from './pages/albums/albums.component';
 import { HoverInfoDirective } from './core/directives/hover-info/hover-info.directive';
 import { TagPipe } from './core/pipes/tag.pipe';
 import { SingleComponent } from './pages/single/single.component';
+import { AsPipe } from './core/pipes/as.pipe';
+import { TooltipComponent } from './elements/tooltip/tooltip.component';
+import { TooltipDirective } from './core/directives/tooltip/tooltip.directive';
 
 @NgModule({
   declarations: [
@@ -54,6 +64,9 @@ import { SingleComponent } from './pages/single/single.component';
     HoverInfoDirective,
     TagPipe,
     SingleComponent,
+    AsPipe,
+    TooltipComponent,
+    TooltipDirective,
   ],
   imports: [
     BrowserModule,
@@ -73,6 +86,11 @@ import { SingleComponent } from './pages/single/single.component';
       heroExclamationTriangle,
       heroFolderPlusSolid,
       heroPencilSquareSolid,
+      heroBookOpenSolid,
+      heroFilmSolid,
+      heroPlusCircleMini,
+      heroPencilSquareMini,
+      heroPencilMini,
     }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
