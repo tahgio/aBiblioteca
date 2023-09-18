@@ -12,8 +12,8 @@ module.exports = {
       colors: {
         main: "#f8f5f2",
         card: "#fffffe",
-        stroke: "#232323",
-        detail: "#222525",
+        stroke: "#22525",
+        detail: "#818c8c",
         highlight: "#078080",
         secondary: "#f45d48",
         tertiary: "#f8f5f2",

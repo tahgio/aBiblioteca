@@ -137,7 +137,10 @@
                   value=""
                   class="h-fit w-40 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary"
                 >
-                  <option *ngFor="let status of statusList" [value]="status">
+                  <option
+                    *ngFor="let status of bookStatusList"
+                    [value]="status"
+                  >
                     {{ status }}
                   </option>
                 </select>
@@ -317,7 +320,7 @@
                   id="storyline"
                   formControlName="storyline"
                   type="textarea"
-                  class="h-40 w-full resize-none border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary focus:rounded focus:shadow-md focus:outline-none"
+                  class="h-40 w-full resize-none border-b-2 border-highlight bg-card px-4 py-2 text-lg text-detail focus:rounded focus:shadow-md focus:outline-none"
                 ></textarea>
               </div>
               <div class="m-1 flex grow-0 items-end gap-4">
@@ -385,7 +388,10 @@
                   value=""
                   class="h-fit w-40 border-b-2 border-highlight bg-card px-4 py-2 text-xl text-secondary"
                 >
-                  <option *ngFor="let status of statusList" [value]="status">
+                  <option
+                    *ngFor="let status of filmStatusList"
+                    [value]="status"
+                  >
                     {{ status }}
                   </option>
                 </select>

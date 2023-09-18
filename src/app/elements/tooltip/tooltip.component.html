@@ -1,12 +1,16 @@
 <div
-  [class]="
-    'shadow-sm shadow-detail rounded py-1 px-2 text-sm font-semibold fixed opacity-80 -translate-x-1/2 ' +
-    bgcss +
-    textColor +
-    bordercss
-  "
+  [class]="animation + ' h-fit w-fit  fixed '"
   [style.left]="left + 'px'"
   [style.top]="top + 'px'"
 >
-  {{ text }}
+  <div
+    [class]="
+      'shadow-sm shadow-detail rounded py-1 px-2 text-sm font-semibold opacity-80 -translate-x-1/2 ' +
+      bgcss +
+      textColor +
+      bordercss
+    "
+  >
+    {{ text }}
+  </div>
 </div>

@@ -39,13 +39,14 @@ export type Nullable<T> = T | null;
 
 export type TupleToUnion<T extends readonly any[]> = T[number];
 
-export type EntryToModels<T extends EntryType> = T extends 'albums'
-  ? AlbumModel
-  : T extends typeof EntryTypeEnum.books
-  ? BookModel
-  : T extends typeof EntryTypeEnum.films
-  ? FilmModel
-  : never;
+export type EntryToModels<T extends EntryType> =
+  T extends typeof EntryTypeEnum.albums
+    ? AlbumModel
+    : T extends typeof EntryTypeEnum.books
+    ? BookModel
+    : T extends typeof EntryTypeEnum.films
+    ? FilmModel
+    : never;
 
 /*
  *  ASSERTION AND CHECKING FUNCTIONS

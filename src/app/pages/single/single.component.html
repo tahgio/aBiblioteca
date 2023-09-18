@@ -1,11 +1,8 @@
-<div>
+<div *ngIf="singleItem$ | async as item; else loadingOrError">
   <!-- ############ -->
   <!-- ### Card ## -->
   <!-- ############ -->
-  <div
-    class="flex h-fit flex-col gap-1"
-    *ngIf="singleItem$ | async as item; else loadingOrError"
-  >
+  <div class="flex h-fit flex-col gap-1">
     <div
       class="relative flex h-80 w-full gap-3 rounded bg-card shadow-sm shadow-detail"
     >
@@ -87,10 +84,10 @@
         </div>
       </div>
     </div>
-    <div class="flex h-fit w-full justify-between">
-      <span class="flex items-center gap-1 text-base font-light text-highlight">
+    <div class="flex h-fit w-full justify-between text-detail">
+      <span class="flex items-center gap-1 text-base font-light">
         <ng-icon class="text-base" name="heroPlusCircleMini"></ng-icon>
-        <span class="font-medium text-highlight">Adicionado em:</span
+        <span class="font-medium">Adicionado em:</span
         >{{ addedAt | date : "d/MMMM/y 'às' h'h'mm'm'" }}
       </span>
       <span
@@ -104,21 +101,91 @@
     </div>
   </div>
 
-  <!-- ############ -->
-  <!-- ### Erro ## -->
-  <!-- ############ -->
-  <ng-template #loadingOrError>
+  <!-- ############### -->
+  <!-- ### SubModel ## -->
+  <!-- ############### -->
+  <div class="mt-4 flex flex-col gap-4">
+    <h1 class="text-4xl font-bold text-highlight">
+      {{ titleForSubs[entry] }}
+    </h1>
+
     <div
-      *ngIf="appState === 'error'"
-      class="flex h-screen min-h-fit w-full flex-col items-center justify-center gap-5 p-2"
+      class="flex flex-col gap-5"
+      *ngIf="subSingle$ | async as subItems; else loadingOrError"
     >
-      <img src="../../../assets/emptyWasteBin.png" alt="Empty waste bin" />
-      <div class="flex flex-col justify-center">
-        <h1 class="text-5xl font-extrabold text-secondary">OOOPS!</h1>
-        <h2 class="text-2xl font-semibold text-highlight">
-          O item especificado não foi encontrado na Biblioteca.
-        </h2>
-      </div>
+      <ng-container *ngIf="subItems.length > 0; else noSubItems">
+        <ng-container [ngSwitch]="entry">
+          <!-- ################## -->
+          <!-- ### case: Books ## -->
+          <!-- ################## -->
+          <ng-container *ngSwitchCase="'books'">
+            <app-sub-cards *ngFor="let sub of subItems">
+              <ng-template #children>
+                <span class="text-base text-detail">
+                  {{ (sub | as : QuoteModel).quote }}
+                </span>
+                <span class="text-base font-semibold text-secondary">
+                  pg. {{ (sub | as : QuoteModel).page }}</span
+                >
+              </ng-template>
+            </app-sub-cards>
+          </ng-container>
+          <!-- ################## -->
+          <!-- ### case: Films ## -->
+          <!-- ################## -->
+          <ng-container *ngSwitchCase="'films'">
+            <app-sub-cards *ngFor="let sub of subItems">
+              <ng-template #children>
+                <p class="text-base text-detail">
+                  {{ (sub | as : MovieLineModel).movieLine }}
+                </p>
+              </ng-template>
+            </app-sub-cards>
+          </ng-container>
+          <!-- ################### -->
+          <!-- ### case: Albums ## -->
+          <!-- ################### -->
+          <ng-container *ngSwitchCase="'albums'">
+            <app-sub-cards *ngFor="let sub of subItems.sort(sortAlbumTracks())">
+              <ng-template #children>
+                <h1 class="text-lg font-semibold text-highlight">
+                  Faixa Nº {{ (sub | as : TrackModel).trackNumber }}
+                </h1>
+                <div class="flex justify-between">
+                  <span class="text-base text-detail">
+                    {{ (sub | as : TrackModel).trackName }}
+                  </span>
+                  <span class="text-base font-medium text-secondary">
+                    {{ (sub | as : TrackModel).time }}
+                  </span>
+                </div>
+              </ng-template>
+            </app-sub-cards>
+          </ng-container>
+        </ng-container>
+      </ng-container>
     </div>
-  </ng-template>
+  </div>
 </div>
+<!-- ############ -->
+<!-- ### Erro ## -->
+<!-- ############ -->
+<ng-template #loadingOrError>
+  <not-found
+    *ngIf="appState === 'error'"
+    message="O item especificado não foi encontrado na Biblioteca."
+  >
+  </not-found>
+</ng-template>
+
+<!-- ############ -->
+<!-- ### noSubs ## -->
+<!-- ############ -->
+<ng-template #noSubItems>
+  <div>
+    <h2 class="text-lg font-semibold text-secondary">
+      Ainda não foram criadas {{ titleForSubs[entry] | lowercase }} para este
+      item.
+    </h2>
+  </div>
+</ng-template>

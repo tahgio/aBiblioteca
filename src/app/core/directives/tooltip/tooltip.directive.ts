@@ -44,8 +44,7 @@ export class TooltipDirective {
   @HostListener('mouseleave') onMouseLeave() {
     if (this.componentRef) {
       // Add fadeout animation before dettaching component
-      this.domElem.classList.remove('animate-fadeIn');
-      this.domElem.classList.add('animate-fadeOut');
+      this.componentRef.instance.animation = ' animate-fadeOut ';
       // Timeout so component will be destroyed after animation
       setTimeout(() => {
         // Guard in case there is already a tooltip
@@ -87,6 +86,7 @@ export class TooltipDirective {
     compRef.instance.text = this.tooltip;
     compRef.instance.border = this.border;
     compRef.instance.color = this.color;
+    compRef.instance.animation = ' animate-fadeIn ';
     // Get element bounding
     const rect =
       this.elementRef.nativeElement.getBoundingClientRect() as DOMRect;
@@ -105,11 +105,11 @@ export class TooltipDirective {
     switch (this.position) {
       case 'bottom':
         compRef.instance.top = bottom + offset;
-        compRef.instance.left = width / 2 + left;
+        compRef.instance.left = horizontalDiff / 2 + left;
         break;
       case 'top':
         compRef.instance.top = top - offset;
-        compRef.instance.left = width / 2 + left;
+        compRef.instance.left = horizontalDiff / 2 + left;
         break;
 
       default:

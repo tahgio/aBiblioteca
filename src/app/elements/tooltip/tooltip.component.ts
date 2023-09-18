@@ -60,4 +60,7 @@ export class TooltipComponent {
   // -- border
   @Input()
   border: boolean = false;
+  // -- animation
+  @Input()
+  animation!: string;
 }
