@@ -1,0 +1,15 @@
+<div
+  [class]="
+    full
+      ? 'flex h-screen min-h-fit w-full flex-col items-center justify-center gap-5 p-2'
+      : 'flex w-full items-center justify-center gap-5 p-2 m-4'
+  "
+>
+  <img src="../../../assets/emptyWasteBin.png" alt="Empty waste bin" />
+  <div class="flex flex-col justify-center">
+    <h1 class="text-5xl font-extrabold text-secondary">OOOPS!</h1>
+    <h2 class="text-2xl font-semibold text-highlight">
+      {{ message }}
+    </h2>
+  </div>
+</div>

@@ -20,8 +20,15 @@ import {
 } from '@angular/fire/firestore';
 import { EntryType, FormModels, SubFormModels } from '../../types/Unions';
 import { Observable, first, from, map, mergeAll } from 'rxjs';
-import { Nullable, getSubItemType } from '../../types/Methods';
+import {
+  EntryToModels,
+  Nullable,
+  assureNever,
+  getSubItemType,
+} from '../../types/Methods';
 import { FormGroup } from '@angular/forms';
+import { AlbumModel, BookModel, FilmModel } from '../../types/Models';
+import { EntryType as EntryTypeEnum } from '../../types/Consts';
 
 @Injectable({
   providedIn: 'root',
@@ -35,8 +42,11 @@ export class StoreService {
   //-- Load Collection
   loadCollection(entry: EntryType) {
     const instance = collection(this.firestore, entry);
-    return collectionData(instance, { idField: 'id' });
+    return collectionData(instance, { idField: 'id' }).pipe() as Observable<
+      FormModels[]
+    >;
   }
+
   //-- Add Form main method
   async addToCollection(
     entry: EntryType,
@@ -53,7 +63,6 @@ export class StoreService {
     const objWithTimeStamp: FormModels = {
       ...objtoAdd,
       _addedAt: serverTimestamp() as Timestamp,
-      _lastModified: undefined,
     };
     // Add to collection and to subSelection
     const res = await addDoc(instance, objWithTimeStamp);
@@ -140,14 +149,22 @@ export class StoreService {
    * SubCollection
    */
   //-- Load SubCollection
-  loadSub(entry: EntryType, id: string): DocumentData {
+  loadSub(entry: EntryType, id: string): Observable<SubFormModels[]> {
     const instance = collection(
       this.firestore,
       entry,
       id,
       getSubItemType(entry)
     );
-    return collectionData(instance);
+    return collectionData(instance).pipe(
+      map((el) => {
+        if (el !== null) {
+          return el as SubFormModels[];
+        } else {
+          throw new Error('Data not found');
+        }
+      })
+    );
   }
 
   /*

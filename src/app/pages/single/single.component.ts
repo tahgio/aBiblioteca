@@ -10,8 +10,19 @@ import {
   convertPathToEntry,
   isPathType,
 } from 'src/app/core/types/Methods';
-import { AlbumModel, BookModel, FilmModel } from 'src/app/core/types/Models';
-import { EntryType, FormModels } from 'src/app/core/types/Unions';
+import {
+  AlbumModel,
+  BookModel,
+  FilmModel,
+  MovieLineModel,
+  QuoteModel,
+  TrackModel,
+} from 'src/app/core/types/Models';
+import {
+  EntryType,
+  FormModels,
+  SubFormModels,
+} from 'src/app/core/types/Unions';
 
 @Component({
   selector: 'app-single',
@@ -23,13 +34,22 @@ export class SingleComponent implements OnInit {
   AlbumModel!: AlbumModel;
   FilmModel!: FilmModel;
   BookModel!: BookModel;
+  QuoteModel!: QuoteModel;
+  MovieLineModel!: MovieLineModel;
+  TrackModel!: TrackModel;
   // -- Observables
   singleItem$!: Observable<Nullable<FormModels>>;
+  subSingle$!: Observable<SubFormModels[]>;
   // -- Variables
   entry!: EntryType;
   appState: 'stable' | 'error' | 'loading' = 'stable';
   addedAt!: Nullable<Date>;
   lastModified!: Nullable<Date>;
+  titleForSubs = {
+    books: 'Citações',
+    albums: 'Faixas',
+    films: 'Falas do filme',
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -71,6 +91,16 @@ export class SingleComponent implements OnInit {
             throw e;
           })
         );
+        this.subSingle$ = this.store.loadSub(this.entry, itemId).pipe(
+          catchError((e: Error) => {
+            this.appState = AppState.error;
+            this.msg.showToast(
+              ToastTypes.error,
+              `Ocorreu um erro ao localizar ${this.titleForSubs[this.entry]}`
+            );
+            throw e;
+          })
+        );
       } else {
         throw new Error('Path not expected');
       }
@@ -82,5 +112,11 @@ export class SingleComponent implements OnInit {
       'warning',
       'Esta funcionalidade ainda não foi implementada'
     );
+  }
+
+  sortAlbumTracks() {
+    return (a: any, b: any) => {
+      return a.trackNumber - b.trackNumber;
+    };
   }
 }

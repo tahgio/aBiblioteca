@@ -39,15 +39,16 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../../environments/environment';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-import { LivrosComponent } from './pages/livros/livros.component';
-import { FilmesComponent } from './pages/filmes/filmes.component';
-import { AlbumsComponent } from './pages/albums/albums.component';
 import { HoverInfoDirective } from './core/directives/hover-info/hover-info.directive';
 import { TagPipe } from './core/pipes/tag.pipe';
 import { SingleComponent } from './pages/single/single.component';
 import { AsPipe } from './core/pipes/as.pipe';
 import { TooltipComponent } from './elements/tooltip/tooltip.component';
 import { TooltipDirective } from './core/directives/tooltip/tooltip.directive';
+import { ItemsComponent } from './pages/items/items.component';
+import { HeaderComponent } from './elements/header/header.component';
+import { SubCardsComponent } from './elements/sub-cards/sub-cards.component';
+import { NotFoundComponent } from './elements/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -58,15 +59,16 @@ import { TooltipDirective } from './core/directives/tooltip/tooltip.directive';
     StarRatingComponent,
     AddFormComponent,
     ToastComponent,
-    LivrosComponent,
-    FilmesComponent,
-    AlbumsComponent,
     HoverInfoDirective,
     TagPipe,
     SingleComponent,
     AsPipe,
     TooltipComponent,
     TooltipDirective,
+    ItemsComponent,
+    HeaderComponent,
+    SubCardsComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,

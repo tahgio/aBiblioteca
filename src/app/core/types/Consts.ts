@@ -86,3 +86,27 @@ export const MESSAGE_ICONS = {
 } as const;
 
 export const filmStatusList = ['Abandonado', 'Visto', 'Quero Ver'] as const;
+
+export const allItemsInfo = {
+  books: {
+    img: '../../../assets/booksAndCup.png',
+    imgAlt: 'Cat on a bookshelf',
+    title: 'Livros',
+    subTitle:
+      'Aqui, você encontrará uma coleção cuidadosamente selecionada de livros, filmes e músicas que são muito importantes para mim. Esta biblioteca é um reflexo do meu gosto pessoal e dos meus interesses. Espero que você goste!',
+  },
+  films: {
+    img: '../../../assets/typewriterAndPapers.png',
+    imgAlt: 'Green typewriter with folded papers around',
+    title: 'Filmes',
+    subTitle:
+      'Aqui, você encontrará uma coleção cuidadosamente selecionada de livros, filmes e músicas que são muito importantes para mim. Esta biblioteca é um reflexo do meu gosto pessoal e dos meus interesses. Espero que você goste!',
+  },
+  albums: {
+    img: '../../../assets/microphone.png',
+    imgAlt: 'Pink microphone',
+    title: 'Albums',
+    subTitle:
+      'Aqui, você encontrará uma coleção cuidadosamente selecionada de livros, filmes e músicas que são muito importantes para mim. Esta biblioteca é um reflexo do meu gosto pessoal e dos meus interesses. Espero que você goste!',
+  },
+} as const;

@@ -2,7 +2,11 @@ import { Component, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'src/app/core/services/message/message.service';
 import { StoreService } from 'src/app/core/services/store/store.service';
-import { ToastTypes } from 'src/app/core/types/Consts';
+import {
+  ToastTypes,
+  bookStatusList,
+  filmStatusList,
+} from 'src/app/core/types/Consts';
 import { assureNever, convertItemToEntry } from 'src/app/core/types/Methods';
 import {
   MovieLineModel,
@@ -24,7 +28,9 @@ export class AddFormComponent {
   @Input() itemType!: ItemType;
   @Input() form!: FormGroup;
 
-  statusList = ['Lido', 'Lendo', 'Quero Ler', 'Em Espera', 'Abandonado'];
+  bookStatusList = bookStatusList;
+  filmStatusList = filmStatusList;
+
   tagInput: string = '';
   tags: string[] = [];
 
