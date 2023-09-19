@@ -1,6 +1,6 @@
 <div *ngIf="singleItem$ | async as item; else loadingOrError">
   <!-- ############ -->
-  <!-- ### Card ## -->
+  <!-- ### Card ### -->
   <!-- ############ -->
   <div class="flex h-fit flex-col gap-1">
     <div
@@ -19,7 +19,7 @@
         >
           <div
             class="hover-basic flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-secondary bg-main"
-            (click)="onEdit()"
+            (click)="isEdit ? onCancel(item) : onEdit()"
           >
             <ng-icon
               class="text-xs text-secondary"
@@ -28,9 +28,17 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col gap-3 p-3">
+      <div class="flex w-3/4 flex-col gap-3 p-3">
         <div class="flex items-center gap-3">
-          <app-star-rating class="h-6" [static]="item.rating"></app-star-rating>
+          <!-- ############## -->
+          <!-- ### RATING ### -->
+          <!-- ############## -->
+          <app-star-rating
+            class="h-6"
+            [static]="item.rating"
+            [model]="isEdit ? form.rating : null"
+            (modelChange)="onRatingChange($event)"
+          ></app-star-rating>
           <div
             class="flex items-center gap-3 rounded border-highlight px-2 py-1 shadow-sm shadow-detail"
             *ngIf="!(entry === 'albums')"
@@ -44,11 +52,30 @@
             </h3>
           </div>
         </div>
-        <h1 class="text-5xl font-extrabold text-secondary">
+        <!-- ############# -->
+        <!-- ### TITLE ### -->
+        <!-- ############# -->
+        <h1
+          *ngIf="!isEdit; else inptTitle"
+          class="text-5xl font-extrabold text-secondary"
+        >
           {{ item.title }}
         </h1>
+        <ng-template #inptTitle>
+          <input
+            type="text"
+            class="input w-[calc(100%-50px)] text-3xl font-extrabold text-secondary"
+            [(ngModel)]="form.title"
+          />
+        </ng-template>
+        <!-- ############## -->
+        <!-- ### ARTIST ### -->
+        <!-- ############## -->
         <div class="flex flex-col">
-          <h2 class="text-2xl font-semibold text-highlight">
+          <h2
+            *ngIf="!isEdit; else inptArtist"
+            class="text-2xl font-semibold text-highlight"
+          >
             {{
               entry === "albums"
                 ? (item | as : AlbumModel).artist
@@ -59,11 +86,33 @@
                 : null
             }}
           </h2>
-          <h3 class="text-xl font-normal text-highlight">
+          <ng-template #inptArtist>
+            <input
+              type="text"
+              class="input w-[calc(100%-50px)] text-2xl font-semibold text-highlight"
+              [ngModel]="
+                entry === 'albums'
+                  ? form.artist
+                  : entry === 'books'
+                  ? form.author
+                  : entry === 'films'
+                  ? form.director
+                  : null
+              "
+              (ngModelChange)="updateModel($event, 'artist', 'author', 'films')"
+            />
+            <!-- ############# -->
+            <!-- ### INFOS ### -->
+            <!-- ############# -->
+          </ng-template>
+          <h3
+            *ngIf="!isEdit; else inptAddInfo"
+            class="text-xl font-normal text-highlight"
+          >
             {{ item.genre }} | {{ item.year }} |
             {{
               entry === "albums"
-                ? (item | as : AlbumModel).artist
+                ? subLength + " faixas"
                 : entry === "books"
                 ? (item | as : BookModel).pages + " pgs"
                 : entry === "films"
@@ -71,6 +120,27 @@
                 : null
             }}
           </h3>
+          <ng-template #inptAddInfo>
+            <div
+              class="flex flex-wrap gap-2 text-xl font-normal text-highlight"
+            >
+              <input type="text" class="input w-52" [(ngModel)]="item.genre" />
+              <input type="text" class="input w-16" [(ngModel)]="item.year" />
+              <input
+                *ngIf="!(entry === 'albums')"
+                type="text"
+                class="input w-24"
+                [ngModel]="
+                  entry === 'books'
+                    ? form.pages
+                    : entry === 'films'
+                    ? form.runtime
+                    : null
+                "
+                (ngModelChange)="updateModel($event, '', 'pages', 'runtime')"
+              />
+            </div>
+          </ng-template>
         </div>
         <div>
           <div class="flex h-fit w-full flex-wrap items-end gap-x-px gap-y-1">
@@ -105,6 +175,33 @@
   <!-- ### SubModel ## -->
   <!-- ############### -->
   <div class="mt-4 flex flex-col gap-4">
+    <!-- ############## -->
+    <!-- ### REVIEW ### -->
+    <!-- ############## -->
+    <app-sub-cards *ngIf="entry === 'albums'">
+      <ng-template #children>
+        <h1 class="text-4xl font-bold text-highlight">
+          Review
+          <span class="text-xl font-medium text-secondary">
+            by {{ (item | as : AlbumModel).albumReview.reviewer }}
+          </span>
+        </h1>
+        <p class="p-4 text-justify text-base text-detail">
+          {{ (item | as : AlbumModel).albumReview.review }}
+        </p>
+      </ng-template>
+    </app-sub-cards>
+    <!-- ################# -->
+    <!-- ### STORYLINE ### -->
+    <!-- ################# -->
+    <app-sub-cards *ngIf="entry === 'films'">
+      <ng-template #children>
+        <h1 class="text-3xl font-bold text-secondary">Sinopse</h1>
+        <p class="text-justify text-base text-detail">
+          {{ (item | as : FilmModel).storyline }}
+        </p>
+      </ng-template>
+    </app-sub-cards>
     <h1 class="text-4xl font-bold text-highlight">
       {{ titleForSubs[entry] }}
     </h1>

@@ -1,9 +1,16 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  forwardRef,
+  EventEmitter,
+} from '@angular/core';
 import {
   ControlValueAccessor,
   FormGroup,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
+import { Nullable } from 'src/app/core/types/Methods';
 
 @Component({
   selector: 'app-star-rating',
@@ -19,6 +26,8 @@ import {
 export class StarRatingComponent implements ControlValueAccessor {
   @Input() mainForm!: FormGroup;
   @Input() static!: number;
+  @Input() model!: Nullable<number>;
+  @Output() modelChange = new EventEmitter<number>();
 
   onChange = (rating: number) => {};
   onTouched = () => {};
@@ -31,5 +40,9 @@ export class StarRatingComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
+  }
+
+  onModelChange(i: number) {
+    this.modelChange.emit(i);
   }
 }

@@ -10,4 +10,7 @@
   .hover-basic {
     @apply transition-all hover:-translate-y-1 hover:shadow-sm hover:shadow-detail;
   }
+  .input {
+    @apply border-b-2 border-highlight p-1 my-0.5 focus:rounded focus:shadow-md focus:outline-none;
+  }
 }

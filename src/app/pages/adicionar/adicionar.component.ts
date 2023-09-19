@@ -3,7 +3,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UnionToArray } from 'src/app/core/types/Methods';
 import { inArrayValidator } from 'src/app/core/validators/inArrayValidator';
 import { ItemType } from 'src/app/core/types/Unions';
-import { bookStatusList, filmStatusList } from 'src/app/core/types/Consts';
+import {
+  bookStatusList,
+  filmStatusList,
+  formGroups,
+} from 'src/app/core/types/Consts';
 
 @Component({
   selector: 'app-adicionar',
@@ -26,50 +30,17 @@ export class AdicionarComponent implements OnInit {
 
   ngOnInit(): void {
     // BOOK
-    this.bookForm = this.fb.group({
-      title: ['', Validators.required],
-      author: ['', Validators.required],
-      genre: [''],
-      cover: ['', Validators.required],
-      year: ['', Validators.required],
-      pages: [
-        '',
-        [Validators.min(10), Validators.max(9999), Validators.required],
-      ],
-      tags: [[]],
-      status: ['', [Validators.required, inArrayValidator(bookStatusList)]],
-      rating: [1, [Validators.min(1), Validators.max(5)]],
-    });
+    this.bookForm = this.fb.group(formGroups.books);
     this.mainForm = this.bookForm;
     // FILM
-    this.filmForm = this.fb.group({
-      title: ['', Validators.required],
-      director: ['', Validators.required],
-      writer: ['', Validators.required],
-      storyline: ['', Validators.required],
-      country: ['', Validators.required],
-      genre: [''],
-      cover: ['', Validators.required],
-      year: ['', Validators.required],
-      runtime: ['', [Validators.required]],
-      tags: [[]],
-      status: ['', [Validators.required, inArrayValidator(filmStatusList)]],
-      rating: [1, [Validators.min(1), Validators.max(5)]],
-    });
+    this.filmForm = this.fb.group(formGroups.films);
     // ALBUM
-    this.albumForm = this.fb.group({
-      title: ['', Validators.required],
-      artist: ['', Validators.required],
-      genre: [''],
-      cover: ['', Validators.required],
-      albumReview: this.fb.group({
-        reviewer: [''],
-        review: [''],
-      }),
-      year: ['', Validators.required],
-      tags: [[]],
-      rating: [1, [Validators.min(1), Validators.max(5)]],
-    });
+    // insert fbGroup in albumObj
+    const albumfb = {
+      ...formGroups.albums,
+      albumReview: this.fb.group(formGroups.albums.albumReview),
+    };
+    this.albumForm = this.fb.group(albumfb);
   }
 
   onItemSelect(event: Event) {

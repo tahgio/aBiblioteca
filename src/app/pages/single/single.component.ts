@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DocumentData } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, catchError, first, map } from 'rxjs';
 import { MessageService } from 'src/app/core/services/message/message.service';
@@ -7,6 +6,7 @@ import { StoreService } from 'src/app/core/services/store/store.service';
 import { AppState, ToastTypes } from 'src/app/core/types/Consts';
 import {
   Nullable,
+  assureNever,
   convertPathToEntry,
   isPathType,
 } from 'src/app/core/types/Methods';
@@ -43,8 +43,11 @@ export class SingleComponent implements OnInit {
   // -- Variables
   entry!: EntryType;
   appState: 'stable' | 'error' | 'loading' = 'stable';
+  isEdit: boolean = false;
   addedAt!: Nullable<Date>;
   lastModified!: Nullable<Date>;
+  form!: any;
+  subLength: number = 0;
   titleForSubs = {
     books: 'Citações',
     albums: 'Faixas',
@@ -79,7 +82,9 @@ export class SingleComponent implements OnInit {
             this.lastModified = el?._lastModified
               ? el._lastModified.toDate()
               : null;
-
+            // Assign form for editing pourposes
+            // Init Form for editing according to entry type
+            this.form = { ...el } as FormModels;
             return el;
           }),
           catchError((e: Error) => {
@@ -92,6 +97,10 @@ export class SingleComponent implements OnInit {
           })
         );
         this.subSingle$ = this.store.loadSub(this.entry, itemId).pipe(
+          map((el) => {
+            this.subLength = el.length;
+            return el;
+          }),
           catchError((e: Error) => {
             this.appState = AppState.error;
             this.msg.showToast(
@@ -107,16 +116,42 @@ export class SingleComponent implements OnInit {
     });
   }
 
-  onEdit() {
-    this.msg.showToast(
-      'warning',
-      'Esta funcionalidade ainda não foi implementada'
-    );
+  onEdit(): void {
+    this.isEdit = true;
+  }
+
+  onCancel(item: FormModels) {
+    // Reset form
+    console.log(this.form);
+    this.form = { ...item };
+    // Reset state
+    this.isEdit = false;
   }
 
   sortAlbumTracks() {
     return (a: any, b: any) => {
       return a.trackNumber - b.trackNumber;
     };
+  }
+
+  onRatingChange(e: number) {
+    this.form = { ...this.form, rating: e };
+  }
+
+  updateModel(value: string, ...keys: string[]) {
+    switch (this.entry) {
+      case 'albums':
+        this.form[keys[0]] = value;
+        break;
+      case 'books':
+        this.form[keys[1]] = value;
+        break;
+      case 'films':
+        this.form[keys[2]] = value;
+        break;
+      default:
+        assureNever(this.entry);
+        break;
+    }
   }
 }
