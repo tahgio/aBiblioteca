@@ -18,7 +18,12 @@ import {
   getDoc,
   Timestamp,
 } from '@angular/fire/firestore';
-import { EntryType, FormModels, SubFormModels } from '../../types/Unions';
+import {
+  EntryType,
+  FormModels,
+  SubFormModels,
+  SubItemType,
+} from '../../types/Unions';
 import { Observable, first, from, map, mergeAll } from 'rxjs';
 import {
   EntryToModels,
@@ -72,7 +77,7 @@ export class StoreService {
       getSubItemType(entry)
     );
     const docRef = doc(this.firestore, entry, res.id);
-    this.getLastRandomNumber('quotes').subscribe((lastRandom) => {
+    this.getLastRandomNumber(getSubItemType(entry)).subscribe((lastRandom) => {
       subObj.forEach((e, i) => {
         const subWithMetadata: SubFormModels = {
           ...e,
@@ -112,7 +117,7 @@ export class StoreService {
   }
 
   //-- Collection group
-  loadRandomDocFromSub(field: 'quotes' | 'tracks' | 'movieLines') {
+  loadRandomDocFromSub(field: SubItemType) {
     const randomNumberConverter = {
       toFirestore: () => ({}),
       fromFirestore: (
@@ -187,7 +192,7 @@ export class StoreService {
   /*
    * Utils
    */
-  private getLastRandomNumber(field: 'quotes' | 'tracks' | 'movieLines') {
+  private getLastRandomNumber(field: SubItemType) {
     // Init converter
     const randomNumberConverter = {
       toFirestore: () => ({}),

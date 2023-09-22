@@ -7,6 +7,9 @@ import {
   HostListener,
   Injector,
   Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
   ViewContainerRef,
 } from '@angular/core';
 import { Nullable, assureNever } from '../../types/Methods';
@@ -16,7 +19,7 @@ import { Colors } from '../../types/Unions';
 @Directive({
   selector: '[tooltip]',
 })
-export class TooltipDirective {
+export class TooltipDirective implements OnDestroy {
   // Init
   @Input()
   tooltip!: string;
@@ -30,6 +33,13 @@ export class TooltipDirective {
   domElem!: HTMLElement;
 
   constructor(private elementRef: ElementRef, private appRef: ApplicationRef) {}
+  ngOnDestroy(): void {
+    if (this.componentRef) {
+      this.appRef.detachView(this.componentRef.hostView);
+      this.componentRef.destroy();
+    }
+    this.componentRef = null;
+  }
 
   /*
    * Mouse Enter Method
@@ -53,7 +63,7 @@ export class TooltipDirective {
           this.componentRef.destroy();
         }
         this.componentRef = null;
-      }, 500);
+      }, 100);
     }
   }
 
@@ -61,6 +71,12 @@ export class TooltipDirective {
    * PRIVATE METHODS
    */
   private create() {
+    // Destroy tooltip if there is one already
+    if (this.componentRef) {
+      this.appRef.detachView(this.componentRef.hostView);
+      this.componentRef.destroy();
+      this.componentRef = null;
+    }
     // Create component
     const element = document.createElement('app-tooltip');
     // Get its reference
@@ -68,11 +84,11 @@ export class TooltipDirective {
       TooltipComponent,
       element
     ) as ComponentRef<TooltipComponent>;
-    // Setup Inputs and position
-    this.setupTooltip(compRef);
     // Save and atttach ref
     this.componentRef = compRef;
-    const hostView = compRef.hostView;
+    // Setup Inputs and position
+    this.setupTooltip(this.componentRef);
+    const hostView = this.componentRef.hostView;
     this.appRef.attachView(hostView);
     const domElem = (hostView as EmbeddedViewRef<any>)
       .rootNodes[0] as HTMLElement;

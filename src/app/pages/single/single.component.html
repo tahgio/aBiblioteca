@@ -1,268 +1,407 @@
 <div *ngIf="singleItem$ | async as item; else loadingOrError">
-  <!-- ############ -->
-  <!-- ### Card ### -->
-  <!-- ############ -->
-  <div class="flex h-fit flex-col gap-1">
-    <div
-      class="relative flex h-80 w-full gap-3 rounded bg-card shadow-sm shadow-detail"
-    >
-      <div class="h-full w-1/4">
-        <img
-          class="h-full w-full rounded-l object-cover object-center"
-          [src]="item.cover"
-        />
-        <div
-          class="absolute bottom-3 left-3 h-fit w-fit p-px"
-          tooltip="Clique para editar o item"
-          color="card"
-          [border]="true"
-        >
-          <div
-            class="hover-basic flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-secondary bg-main"
-            (click)="isEdit ? onCancel(item) : onEdit()"
-          >
-            <ng-icon
-              class="text-xs text-secondary"
-              name="heroPencilMini"
-            ></ng-icon>
-          </div>
-        </div>
-      </div>
-      <div class="flex w-3/4 flex-col gap-3 p-3">
-        <div class="flex items-center gap-3">
-          <!-- ############## -->
-          <!-- ### RATING ### -->
-          <!-- ############## -->
-          <app-star-rating
-            class="h-6"
-            [static]="item.rating"
-            [model]="isEdit ? form.rating : null"
-            (modelChange)="onRatingChange($event)"
-          ></app-star-rating>
-          <div
-            class="flex items-center gap-3 rounded border-highlight px-2 py-1 shadow-sm shadow-detail"
-            *ngIf="!(entry === 'albums')"
-          >
-            <ng-icon
-              class="text-xl text-highlight"
-              [name]="entry === 'films' ? 'heroFilmSolid' : 'heroBookOpenSolid'"
-            ></ng-icon>
-            <h3 class="text-xl font-normal text-highlight">
-              {{ (item | as : BookModel : FilmModel).status }}
-            </h3>
-          </div>
-        </div>
-        <!-- ############# -->
-        <!-- ### TITLE ### -->
-        <!-- ############# -->
-        <h1
-          *ngIf="!isEdit; else inptTitle"
-          class="text-5xl font-extrabold text-secondary"
-        >
-          {{ item.title }}
-        </h1>
-        <ng-template #inptTitle>
-          <input
-            type="text"
-            class="input w-[calc(100%-50px)] text-3xl font-extrabold text-secondary"
-            [(ngModel)]="form.title"
-          />
-        </ng-template>
-        <!-- ############## -->
-        <!-- ### ARTIST ### -->
-        <!-- ############## -->
-        <div class="flex flex-col">
-          <h2
-            *ngIf="!isEdit; else inptArtist"
-            class="text-2xl font-semibold text-highlight"
-          >
-            {{
-              entry === "albums"
-                ? (item | as : AlbumModel).artist
-                : entry === "books"
-                ? (item | as : BookModel).author
-                : entry === "films"
-                ? (item | as : FilmModel).director
-                : null
-            }}
-          </h2>
-          <ng-template #inptArtist>
-            <input
-              type="text"
-              class="input w-[calc(100%-50px)] text-2xl font-semibold text-highlight"
-              [ngModel]="
-                entry === 'albums'
-                  ? form.artist
-                  : entry === 'books'
-                  ? form.author
-                  : entry === 'films'
-                  ? form.director
-                  : null
-              "
-              (ngModelChange)="updateModel($event, 'artist', 'author', 'films')"
-            />
-            <!-- ############# -->
-            <!-- ### INFOS ### -->
-            <!-- ############# -->
-          </ng-template>
-          <h3
-            *ngIf="!isEdit; else inptAddInfo"
-            class="text-xl font-normal text-highlight"
-          >
-            {{ item.genre }} | {{ item.year }} |
-            {{
-              entry === "albums"
-                ? subLength + " faixas"
-                : entry === "books"
-                ? (item | as : BookModel).pages + " pgs"
-                : entry === "films"
-                ? (item | as : FilmModel).runtime
-                : null
-            }}
-          </h3>
-          <ng-template #inptAddInfo>
-            <div
-              class="flex flex-wrap gap-2 text-xl font-normal text-highlight"
-            >
-              <input type="text" class="input w-52" [(ngModel)]="item.genre" />
-              <input type="text" class="input w-16" [(ngModel)]="item.year" />
-              <input
-                *ngIf="!(entry === 'albums')"
-                type="text"
-                class="input w-24"
-                [ngModel]="
-                  entry === 'books'
-                    ? form.pages
-                    : entry === 'films'
-                    ? form.runtime
-                    : null
-                "
-                (ngModelChange)="updateModel($event, '', 'pages', 'runtime')"
-              />
-            </div>
-          </ng-template>
-        </div>
-        <div>
-          <div class="flex h-fit w-full flex-wrap items-end gap-x-px gap-y-1">
-            <span
-              *ngFor="let tag of item['tags'].sort()"
-              class="hover-basic mr-1 cursor-default rounded-sm bg-secondary px-2 py-1 text-center text-lg font-semibold leading-none text-card opacity-80"
-            >
-              {{ tag }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="flex h-fit w-full justify-between text-detail">
-      <span class="flex items-center gap-1 text-base font-light">
-        <ng-icon class="text-base" name="heroPlusCircleMini"></ng-icon>
-        <span class="font-medium">Adicionado em:</span
-        >{{ addedAt | date : "d/MMMM/y 'às' h'h'mm'm'" }}
-      </span>
-      <span
-        *ngIf="lastModified"
-        class="flex items-center gap-1 text-base font-light text-highlight"
+  <ng-container *ngIf="subSingle$ | async as subItems; else loadingOrError">
+    <!-- ############ -->
+    <!-- ### Card ### -->
+    <!-- ############ -->
+    <div class="flex h-fit flex-col gap-1">
+      <div
+        class="relative flex h-80 w-full gap-3 rounded bg-card shadow-sm shadow-detail"
       >
-        <ng-icon class="text-base" name="heroPencilSquareMini"></ng-icon>
-        <span class="font-medium text-highlight">Última modificação em:</span
-        >{{ lastModified | date : "d/MMMM/y 'às' h'h'mm'm'" }}
-      </span>
-    </div>
-  </div>
-
-  <!-- ############### -->
-  <!-- ### SubModel ## -->
-  <!-- ############### -->
-  <div class="mt-4 flex flex-col gap-4">
-    <!-- ############## -->
-    <!-- ### REVIEW ### -->
-    <!-- ############## -->
-    <app-sub-cards *ngIf="entry === 'albums'">
-      <ng-template #children>
-        <h1 class="text-4xl font-bold text-highlight">
-          Review
-          <span class="text-xl font-medium text-secondary">
-            by {{ (item | as : AlbumModel).albumReview.reviewer }}
-          </span>
-        </h1>
-        <p class="p-4 text-justify text-base text-detail">
-          {{ (item | as : AlbumModel).albumReview.review }}
-        </p>
-      </ng-template>
-    </app-sub-cards>
-    <!-- ################# -->
-    <!-- ### STORYLINE ### -->
-    <!-- ################# -->
-    <app-sub-cards *ngIf="entry === 'films'">
-      <ng-template #children>
-        <h1 class="text-3xl font-bold text-secondary">Sinopse</h1>
-        <p class="text-justify text-base text-detail">
-          {{ (item | as : FilmModel).storyline }}
-        </p>
-      </ng-template>
-    </app-sub-cards>
-    <h1 class="text-4xl font-bold text-highlight">
-      {{ titleForSubs[entry] }}
-    </h1>
-
-    <div
-      class="flex flex-col gap-5"
-      *ngIf="subSingle$ | async as subItems; else loadingOrError"
-    >
-      <ng-container *ngIf="subItems.length > 0; else noSubItems">
-        <ng-container [ngSwitch]="entry">
-          <!-- ################## -->
-          <!-- ### case: Books ## -->
-          <!-- ################## -->
-          <ng-container *ngSwitchCase="'books'">
-            <app-sub-cards *ngFor="let sub of subItems">
-              <ng-template #children>
-                <span class="text-base text-detail">
-                  {{ (sub | as : QuoteModel).quote }}
-                </span>
-                <span class="text-base font-semibold text-secondary">
-                  pg. {{ (sub | as : QuoteModel).page }}</span
+        <!-- ############# -->
+        <!-- ### COVER ### -->
+        <!-- ############# -->
+        <div class="h-full w-1/4">
+          <img
+            class="h-full w-full rounded-l object-cover object-center"
+            [src]="item.cover"
+          />
+          <div
+            class="absolute bottom-3 left-3 h-fit w-fit p-px"
+            [tooltip]="isEdit ? 'Cancelar' : 'Editar item'"
+            color="card"
+            [border]="true"
+          >
+            <div
+              class="hover-basic flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-secondary bg-main"
+              (click)="isEdit ? onCancel(item, subItems) : onEdit()"
+            >
+              <ng-icon
+                class="text-xs text-secondary"
+                [name]="isEdit ? 'heroXMarkSolid' : 'heroPencilMini'"
+              ></ng-icon>
+            </div>
+          </div>
+        </div>
+        <div class="flex w-3/4 flex-col gap-3 p-3">
+          <div class="flex items-center gap-3">
+            <!-- ############## -->
+            <!-- ### RATING ### -->
+            <!-- ############## -->
+            <app-star-rating
+              class="h-6"
+              [static]="item.rating"
+              [model]="isEdit ? form.rating : null"
+              (modelChange)="onRatingChange($event)"
+            ></app-star-rating>
+            <!-- ############## -->
+            <!-- ### STATUS ### -->
+            <!-- ############## -->
+            <ng-container *ngIf="!(entry === 'albums')">
+              <div
+                class="flex items-center gap-3 rounded border-highlight px-2 py-1 shadow-sm shadow-detail"
+                *ngIf="!isEdit; else inptStatus"
+              >
+                <ng-icon
+                  class="text-xl text-highlight"
+                  [name]="
+                    entry === 'films' ? 'heroFilmSolid' : 'heroBookOpenSolid'
+                  "
+                ></ng-icon>
+                <h3 class="text-xl font-normal text-highlight">
+                  {{ (item | as : BookModel : FilmModel).status }}
+                </h3>
+              </div>
+              <ng-template #inptStatus>
+                <div
+                  class="flex h-fit items-center gap-3 rounded border-highlight px-4 py-2 text-xl text-highlight shadow-sm shadow-detail"
                 >
-              </ng-template>
-            </app-sub-cards>
-          </ng-container>
-          <!-- ################## -->
-          <!-- ### case: Films ## -->
-          <!-- ################## -->
-          <ng-container *ngSwitchCase="'films'">
-            <app-sub-cards *ngFor="let sub of subItems">
-              <ng-template #children>
-                <p class="text-base text-detail">
-                  {{ (sub | as : MovieLineModel).movieLine }}
-                </p>
-              </ng-template>
-            </app-sub-cards>
-          </ng-container>
-          <!-- ################### -->
-          <!-- ### case: Albums ## -->
-          <!-- ################### -->
-          <ng-container *ngSwitchCase="'albums'">
-            <app-sub-cards *ngFor="let sub of subItems.sort(sortAlbumTracks())">
-              <ng-template #children>
-                <h1 class="text-lg font-semibold text-highlight">
-                  Faixa Nº {{ (sub | as : TrackModel).trackNumber }}
-                </h1>
-                <div class="flex justify-between">
-                  <span class="text-base text-detail">
-                    {{ (sub | as : TrackModel).trackName }}
-                  </span>
-                  <span class="text-base font-medium text-secondary">
-                    {{ (sub | as : TrackModel).time }}
-                  </span>
+                  <ng-icon
+                    [name]="
+                      entry === 'films' ? 'heroFilmSolid' : 'heroBookOpenSolid'
+                    "
+                  ></ng-icon>
+                  <select class="bg-card" id="status" [(ngModel)]="form.status">
+                    <ng-template ngFor let-status [ngForOf]="statusList">
+                      <option
+                        [value]="status"
+                        [selected]="status === form.status"
+                      >
+                        {{ status }}
+                      </option>
+                    </ng-template>
+                  </select>
                 </div>
               </ng-template>
-            </app-sub-cards>
+            </ng-container>
+          </div>
+          <!-- ############# -->
+          <!-- ### TITLE ### -->
+          <!-- ############# -->
+          <h1
+            *ngIf="!isEdit; else inptTitle"
+            class="text-5xl font-extrabold text-secondary"
+          >
+            {{ item.title }}
+          </h1>
+          <ng-template #inptTitle>
+            <input
+              type="text"
+              class="input w-[calc(100%-45px)] text-2xl font-extrabold text-secondary"
+              [(ngModel)]="form.title"
+            />
+          </ng-template>
+          <!-- ############## -->
+          <!-- ### ARTIST ### -->
+          <!-- ############## -->
+          <div class="flex flex-col">
+            <h2
+              *ngIf="!isEdit; else inptArtist"
+              class="text-2xl font-semibold text-highlight"
+            >
+              {{
+                entry === "albums"
+                  ? (item | as : AlbumModel).artist
+                  : entry === "books"
+                  ? (item | as : BookModel).author
+                  : entry === "films"
+                  ? (item | as : FilmModel).director
+                  : null
+              }}
+            </h2>
+            <ng-template #inptArtist>
+              <input
+                type="text"
+                class="input w-[calc(100%-45px)] text-lg font-semibold text-highlight"
+                [ngModel]="
+                  entry === 'albums'
+                    ? form.artist
+                    : entry === 'books'
+                    ? form.author
+                    : entry === 'films'
+                    ? form.director
+                    : null
+                "
+                (ngModelChange)="
+                  updateModel($event, 'artist', 'author', 'films')
+                "
+              />
+              <!-- ############# -->
+              <!-- ### INFOS ### -->
+              <!-- ############# -->
+            </ng-template>
+            <h3
+              *ngIf="!isEdit; else inptAddInfo"
+              class="text-lg font-normal text-highlight"
+            >
+              {{ item.genre }} | {{ item.year }} |
+              {{
+                entry === "albums"
+                  ? subLength + " faixas"
+                  : entry === "books"
+                  ? (item | as : BookModel).pages + " pgs"
+                  : entry === "films"
+                  ? (item | as : FilmModel).runtime
+                  : null
+              }}
+            </h3>
+            <ng-template #inptAddInfo>
+              <div class="flex gap-2 text-xl font-normal text-highlight">
+                <input
+                  type="text"
+                  class="input w-52"
+                  [(ngModel)]="form.genre"
+                />
+                <input type="text" class="input w-16" [(ngModel)]="form.year" />
+                <input
+                  *ngIf="!(entry === 'albums')"
+                  type="text"
+                  class="input w-24"
+                  [ngModel]="
+                    entry === 'books'
+                      ? form.pages
+                      : entry === 'films'
+                      ? form.runtime
+                      : null
+                  "
+                  (ngModelChange)="updateModel($event, '', 'pages', 'runtime')"
+                />
+                <!-- TAG INPUT -->
+                <div class="relative">
+                  <input
+                    placeholder="Tags"
+                    type="text"
+                    [(ngModel)]="tagInput"
+                    [ngModelOptions]="{ standalone: true }"
+                    (keydown.enter)="addTag($event)"
+                    class="input w-full text-lg text-secondary"
+                  />
+                  <button
+                    class="absolute right-0 top-2 rounded px-1 py-0.5 text-detail"
+                    *ngIf="tagInput.length > 0"
+                    (click)="addTag($event)"
+                  >
+                    <ng-icon class="text-2xl" name="heroPlusCircleSolid">
+                    </ng-icon>
+                  </button>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+          <!-- ############ -->
+          <!-- ### TAGS ### -->
+          <!-- ############ -->
+          <div class="overflow-auto">
+            <div
+              *ngIf="!isEdit; else inptTags"
+              class="flex h-fit w-full flex-wrap items-end gap-x-px gap-y-1"
+            >
+              <span
+                *ngFor="let tag of item['tags'].sort()"
+                class="hover-basic mr-1 cursor-default rounded-sm bg-secondary px-2 py-1 text-center text-lg font-semibold leading-none text-card opacity-80"
+              >
+                {{ tag }}
+              </span>
+            </div>
+            <ng-template #inptTags>
+              <div
+                class="flex w-full flex-wrap items-center gap-2 overflow-hidden"
+              >
+                <div
+                  class="flex h-fit items-center gap-2 rounded bg-detail px-2 py-0.5 text-card"
+                  *ngFor="let tag of form['tags'].sort()"
+                >
+                  {{ tag }}
+                  <ng-icon
+                    class="cursor-pointer"
+                    (click)="popTag(tag)"
+                    name="heroXCircleSolid"
+                  ></ng-icon>
+                </div>
+                <div *ngIf="form['tags'].length === 0">
+                  <h4 class="text-slate-400">Adicione uma tag</h4>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <!-- ###################### -->
+      <!-- ### EDIT COVER URL ### -->
+      <!-- ###################### -->
+      <div *ngIf="isEdit" class="flex w-full items-center justify-center gap-3">
+        <label for="coverURL" class="text-lg font-medium text-secondary">
+          Url da capa:
+        </label>
+        <input
+          type="text"
+          id="coverURL"
+          class="input grow rounded font-normal text-highlight shadow-sm shadow-detail"
+          [(ngModel)]="form.cover"
+        />
+      </div>
+
+      <!-- ##################### -->
+      <!-- ### MODIFIED INFO ### -->
+      <!-- ##################### -->
+      <div class="flex h-fit w-full justify-between text-detail">
+        <span class="flex items-center gap-1 text-base font-light">
+          <ng-icon class="text-base" name="heroPlusCircleMini"></ng-icon>
+          <span class="font-medium">Adicionado em:</span
+          >{{ addedAt | date : "d/MMMM/y 'às' h'h'mm'm'" }}
+        </span>
+        <span
+          *ngIf="lastModified"
+          class="flex items-center gap-1 text-base font-light text-highlight"
+        >
+          <ng-icon class="text-base" name="heroPencilSquareMini"></ng-icon>
+          <span class="font-medium text-highlight">Última modificação em:</span
+          >{{ lastModified | date : "d/MMMM/y 'às' h'h'mm'm'" }}
+        </span>
+      </div>
+    </div>
+
+    <!-- ############### -->
+    <!-- ### SubModel ## -->
+    <!-- ############### -->
+    <div class="mt-4 flex flex-col gap-4">
+      <!-- ############## -->
+      <!-- ### REVIEW ### -->
+      <!-- ############## -->
+      <app-sub-cards *ngIf="entry === 'albums'">
+        <ng-template #children>
+          <h1 class="text-4xl font-bold text-highlight">
+            Review
+            <span class="text-xl font-medium text-secondary">
+              by {{ (item | as : AlbumModel).albumReview.reviewer }}
+            </span>
+          </h1>
+          <p class="p-4 text-justify text-base text-detail">
+            {{ (item | as : AlbumModel).albumReview.review }}
+          </p>
+        </ng-template>
+      </app-sub-cards>
+      <!-- ################# -->
+      <!-- ### STORYLINE ### -->
+      <!-- ################# -->
+      <app-sub-cards *ngIf="entry === 'films'">
+        <ng-template #children>
+          <h1 class="text-3xl font-bold text-secondary">Sinopse</h1>
+          <p class="text-justify text-base text-detail">
+            {{ (item | as : FilmModel).storyline }}
+          </p>
+        </ng-template>
+      </app-sub-cards>
+      <h1 class="text-4xl font-bold text-highlight">
+        {{ titleForSubs[entry] }}
+      </h1>
+
+      <div class="flex flex-col gap-5">
+        <ng-container *ngIf="subItems.length > 0; else noSubItems">
+          <ng-container [ngSwitch]="entry">
+            <!-- ################## -->
+            <!-- ### case: Books ## -->
+            <!-- ################## -->
+            <ng-container *ngSwitchCase="'books'">
+              <ng-container *ngIf="!isEdit; else inptQuotes">
+                <app-sub-cards *ngFor="let sub of subItems">
+                  <ng-template #children>
+                    <span class="text-base text-detail">
+                      {{ (sub | as : QuoteModel).quote }}
+                    </span>
+                    <span class="text-base font-semibold text-secondary">
+                      pg. {{ (sub | as : QuoteModel).page }}</span
+                    >
+                  </ng-template>
+                </app-sub-cards>
+              </ng-container>
+              <ng-template #inptQuotes>
+                <app-sub-cards *ngFor="let sub of subForm; index as i">
+                  <ng-template #children>
+                    <div class="flex flex-col gap-3">
+                      <textarea
+                        class="h-48 w-full flex-grow resize-none overflow-x-hidden p-2 text-base text-detail focus:rounded focus:shadow-md focus:outline-none"
+                        >{{ sub.quote }}</textarea
+                      >
+                      <div class="flex items-end justify-between">
+                        <div class="flex items-end gap-4">
+                          <label
+                            class="text-base font-bold text-secondary"
+                            [for]="'quote_' + i"
+                            >Página:</label
+                          >
+                          <input
+                            [id]="'quote_' + i"
+                            class="input w-20 text-base font-semibold text-detail"
+                            [(ngModel)]="sub.page"
+                          />
+                        </div>
+                        <div
+                          class="hover-basic flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-secondary"
+                          (click)="deleteQuote(i)"
+                          tooltip="Deletar citação"
+                          color="card"
+                          [border]="true"
+                        >
+                          <ng-icon
+                            class="text-base text-card"
+                            name="heroXMarkSolid"
+                          ></ng-icon>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </app-sub-cards>
+              </ng-template>
+            </ng-container>
+            <!-- ################## -->
+            <!-- ### case: Films ## -->
+            <!-- ################## -->
+            <ng-container *ngSwitchCase="'films'">
+              <app-sub-cards *ngFor="let sub of subItems">
+                <ng-template #children>
+                  <p class="text-base text-detail">
+                    {{ (sub | as : MovieLineModel).movieLine }}
+                  </p>
+                </ng-template>
+              </app-sub-cards>
+            </ng-container>
+            <!-- ################### -->
+            <!-- ### case: Albums ## -->
+            <!-- ################### -->
+            <ng-container *ngSwitchCase="'albums'">
+              <app-sub-cards
+                *ngFor="let sub of subItems.sort(sortAlbumTracks())"
+              >
+                <ng-template #children>
+                  <h1 class="text-lg font-semibold text-highlight">
+                    Faixa Nº {{ (sub | as : TrackModel).trackNumber }}
+                  </h1>
+                  <div class="flex justify-between">
+                    <span class="text-base text-detail">
+                      {{ (sub | as : TrackModel).trackName }}
+                    </span>
+                    <span class="text-base font-medium text-secondary">
+                      {{ (sub | as : TrackModel).time }}
+                    </span>
+                  </div>
+                </ng-template>
+              </app-sub-cards>
+            </ng-container>
           </ng-container>
         </ng-container>
-      </ng-container>
+      </div>
     </div>
-  </div>
+  </ng-container>
 </div>
 <!-- ############ -->
 <!-- ### Erro ## -->

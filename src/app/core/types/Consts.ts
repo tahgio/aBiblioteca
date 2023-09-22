@@ -99,7 +99,7 @@ export const allItemsInfo = {
       'Aqui, você encontrará uma coleção cuidadosamente selecionada de livros, filmes e músicas que são muito importantes para mim. Esta biblioteca é um reflexo do meu gosto pessoal e dos meus interesses. Espero que você goste!',
   },
   films: {
-    img: '../../../assets/typewriterAndPapers.png',
+    img: '../../../assets/popcornBowl.png',
     imgAlt: 'Green typewriter with folded papers around',
     title: 'Filmes',
     subTitle:

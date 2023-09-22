@@ -3,7 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, catchError, first, map } from 'rxjs';
 import { MessageService } from 'src/app/core/services/message/message.service';
 import { StoreService } from 'src/app/core/services/store/store.service';
-import { AppState, ToastTypes } from 'src/app/core/types/Consts';
+import {
+  AppState,
+  ToastTypes,
+  bookStatusList,
+  filmStatusList,
+} from 'src/app/core/types/Consts';
 import {
   Nullable,
   assureNever,
@@ -13,8 +18,10 @@ import {
 import {
   AlbumModel,
   BookModel,
+  BookStatusList,
   FilmModel,
   MovieLineModel,
+  MovieStatusList,
   QuoteModel,
   TrackModel,
 } from 'src/app/core/types/Models';
@@ -47,7 +54,10 @@ export class SingleComponent implements OnInit {
   addedAt!: Nullable<Date>;
   lastModified!: Nullable<Date>;
   form!: any;
+  subForm!: any[];
   subLength: number = 0;
+  statusList!: typeof bookStatusList | typeof filmStatusList | null | undefined;
+  tagInput = '';
   titleForSubs = {
     books: 'Citações',
     albums: 'Faixas',
@@ -75,6 +85,12 @@ export class SingleComponent implements OnInit {
       // Check if path is a valid key
       if (isPathType(path)) {
         this.entry = convertPathToEntry(path);
+        this.statusList =
+          this.entry === 'books'
+            ? bookStatusList
+            : this.entry === 'films'
+            ? filmStatusList
+            : null;
         this.singleItem$ = this.store.loadItem(this.entry, itemId).pipe(
           map((el) => {
             // Prepare and convert timestamp to dates
@@ -99,6 +115,7 @@ export class SingleComponent implements OnInit {
         this.subSingle$ = this.store.loadSub(this.entry, itemId).pipe(
           map((el) => {
             this.subLength = el.length;
+            this.subForm = el;
             return el;
           }),
           catchError((e: Error) => {
@@ -120,10 +137,11 @@ export class SingleComponent implements OnInit {
     this.isEdit = true;
   }
 
-  onCancel(item: FormModels) {
+  onCancel(item: FormModels, subItems: SubFormModels[]) {
     // Reset form
-    console.log(this.form);
+    console.log(this.form, this.subForm);
     this.form = { ...item };
+    this.subForm = subItems;
     // Reset state
     this.isEdit = false;
   }
@@ -134,8 +152,38 @@ export class SingleComponent implements OnInit {
     };
   }
 
+  // Add tag to Selected form
+  addTag(event: Event) {
+    event.preventDefault();
+    const lookForDup = this.form.tags.findIndex(
+      (element: string) =>
+        element.toLowerCase() === this.tagInput.trim().toLowerCase()
+    );
+    if (this.tagInput.trim() !== '' && lookForDup < 0) {
+      const tag =
+        this.tagInput.trim().charAt(0).toUpperCase() +
+        this.tagInput.trim().slice(1);
+      this.form.tags = this.form.tags.concat(tag);
+      this.tagInput = '';
+    } else {
+      this.tagInput = '';
+      this.msg.showToast('warning', 'Já existe uma tag com este mesmo nome');
+    }
+  }
+
+  // Remove tag to Selected form
+  popTag(name: string) {
+    this.form.tags = this.form.tags.filter((e: string) => e !== name);
+  }
+
   onRatingChange(e: number) {
     this.form = { ...this.form, rating: e };
+  }
+
+  deleteQuote(index: number) {
+    this.subForm = this.subForm.filter(
+      (e: SubFormModels, i: number) => i !== index
+    );
   }
 
   updateModel(value: string, ...keys: string[]) {
