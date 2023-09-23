@@ -18,6 +18,7 @@ import {
   heroPencilSquareSolid,
   heroBookOpenSolid,
   heroFilmSolid,
+  heroPlusSolid,
 } from '@ng-icons/heroicons/solid';
 import {
   heroStar,
@@ -95,6 +96,7 @@ import { NotFoundComponent } from './elements/not-found/not-found.component';
       heroPencilSquareMini,
       heroPencilMini,
       heroXMarkSolid,
+      heroPlusSolid,
     }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),

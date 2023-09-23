@@ -100,7 +100,16 @@ export class SingleComponent implements OnInit {
               : null;
             // Assign form for editing pourposes
             // Init Form for editing according to entry type
-            this.form = { ...el } as FormModels;
+            // create a deep copy by value for album model
+            if (this.entry === 'albums') {
+              //TODO: update this part
+              this.form = {
+                albumReview: {},
+                ...el,
+              } as AlbumModel;
+            } else {
+              this.form = { ...el } as FormModels;
+            }
             return el;
           }),
           catchError((e: Error) => {
@@ -115,7 +124,7 @@ export class SingleComponent implements OnInit {
         this.subSingle$ = this.store.loadSub(this.entry, itemId).pipe(
           map((el) => {
             this.subLength = el.length;
-            this.subForm = el;
+            this.subForm = el.map((obj) => ({ ...obj }));
             return el;
           }),
           catchError((e: Error) => {
@@ -141,7 +150,7 @@ export class SingleComponent implements OnInit {
     // Reset form
     console.log(this.form, this.subForm);
     this.form = { ...item };
-    this.subForm = subItems;
+    this.subForm = subItems.map((obj) => ({ ...obj }));
     // Reset state
     this.isEdit = false;
   }
@@ -180,10 +189,33 @@ export class SingleComponent implements OnInit {
     this.form = { ...this.form, rating: e };
   }
 
-  deleteQuote(index: number) {
+  deleteSub(index: number) {
     this.subForm = this.subForm.filter(
       (e: SubFormModels, i: number) => i !== index
     );
+  }
+
+  addSub() {
+    switch (this.entry) {
+      case 'books':
+        const newQuote: QuoteModel = { quote: '', page: 0 };
+        this.subForm = [newQuote, ...this.subForm];
+        break;
+      case 'albums':
+        const newTrack: TrackModel = {
+          trackName: '',
+          trackNumber: 0,
+          time: '',
+        };
+        this.subForm = [newTrack, ...this.subForm];
+        break;
+      case 'films':
+        const newMovieLine: MovieLineModel = { movieLine: '' };
+        this.subForm = [newMovieLine, ...this.subForm];
+        break;
+      default:
+        assureNever(this.entry);
+    }
   }
 
   updateModel(value: string, ...keys: string[]) {

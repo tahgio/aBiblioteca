@@ -277,33 +277,83 @@
       <!-- ############## -->
       <!-- ### REVIEW ### -->
       <!-- ############## -->
-      <app-sub-cards *ngIf="entry === 'albums'">
-        <ng-template #children>
-          <h1 class="text-4xl font-bold text-highlight">
-            Review
-            <span class="text-xl font-medium text-secondary">
-              by {{ (item | as : AlbumModel).albumReview.reviewer }}
-            </span>
-          </h1>
-          <p class="p-4 text-justify text-base text-detail">
-            {{ (item | as : AlbumModel).albumReview.review }}
-          </p>
-        </ng-template>
-      </app-sub-cards>
+      <ng-container *ngIf="entry === 'albums'">
+        <app-sub-cards *ngIf="!isEdit; else inptReview">
+          <ng-template #children>
+            <h1 class="text-4xl font-bold text-highlight">
+              Review
+              <span class="text-xl font-medium text-secondary">
+                by {{ (item | as : AlbumModel).albumReview.reviewer }}
+              </span>
+            </h1>
+            <p class="p-4 text-justify text-base text-detail">
+              {{ (item | as : AlbumModel).albumReview.review }}
+            </p>
+          </ng-template>
+        </app-sub-cards>
+      </ng-container>
+      <ng-template #inptReview>
+        <app-sub-cards>
+          <ng-template #children>
+            <h1 class="text-4xl font-bold text-highlight">
+              Review
+              <input
+                [(ngModel)]="form.albumReview.reviewer"
+                class="input text-xl font-medium text-secondary"
+              />
+            </h1>
+            <textarea
+              [(ngModel)]="form.albumReview.review"
+              class="h-48 w-full flex-grow resize-none overflow-x-hidden p-2 text-base text-detail focus:rounded focus:shadow-md focus:outline-none"
+              >{{ form.albumReview.review }}
+            </textarea>
+          </ng-template>
+        </app-sub-cards>
+      </ng-template>
       <!-- ################# -->
       <!-- ### STORYLINE ### -->
       <!-- ################# -->
-      <app-sub-cards *ngIf="entry === 'films'">
-        <ng-template #children>
-          <h1 class="text-3xl font-bold text-secondary">Sinopse</h1>
-          <p class="text-justify text-base text-detail">
-            {{ (item | as : FilmModel).storyline }}
-          </p>
-        </ng-template>
-      </app-sub-cards>
-      <h1 class="text-4xl font-bold text-highlight">
-        {{ titleForSubs[entry] }}
-      </h1>
+      <ng-container *ngIf="entry === 'films'">
+        <app-sub-cards *ngIf="!isEdit; else inptStoryline">
+          <ng-template #children>
+            <h1 class="text-3xl font-bold text-secondary">Sinopse</h1>
+            <p class="text-justify text-base text-detail">
+              {{ (item | as : FilmModel).storyline }}
+            </p>
+          </ng-template>
+        </app-sub-cards>
+      </ng-container>
+      <ng-template #inptStoryline>
+        <app-sub-cards>
+          <ng-template #children>
+            <h1 class="text-3xl font-bold text-secondary">Sinopse</h1>
+            <textarea
+              [(ngModel)]="form.storyline"
+              class="h-36 w-full flex-grow resize-none overflow-x-hidden p-2 text-base text-detail focus:rounded focus:shadow-md focus:outline-none"
+              >{{ form.storyline }}
+            </textarea>
+          </ng-template>
+        </app-sub-cards>
+      </ng-template>
+      <!-- ############ -->
+      <!-- ### SUBS ### -->
+      <!-- ############ -->
+      <span class="flex items-center justify-between">
+        <h1 class="text-4xl font-bold text-highlight">
+          {{ titleForSubs[entry] }}
+        </h1>
+        <button
+          *ngIf="isEdit"
+          class="hover-basic flex h-fit w-fit items-center justify-center gap-2 rounded bg-highlight px-2 py-1 font-semibold text-card shadow-sm shadow-detail"
+          (click)="addSub()"
+        >
+          <ng-icon
+            class="text-lg text-card"
+            name="heroPlusCircleSolid"
+          ></ng-icon>
+          <span>Adicionar</span>
+        </button>
+      </span>
 
       <div class="flex flex-col gap-5">
         <ng-container *ngIf="subItems.length > 0; else noSubItems">
@@ -325,12 +375,13 @@
                 </app-sub-cards>
               </ng-container>
               <ng-template #inptQuotes>
-                <app-sub-cards *ngFor="let sub of subForm; index as i">
+                <app-sub-cards *ngFor="let subf of subForm; index as i">
                   <ng-template #children>
                     <div class="flex flex-col gap-3">
                       <textarea
+                        [(ngModel)]="subf.quote"
                         class="h-48 w-full flex-grow resize-none overflow-x-hidden p-2 text-base text-detail focus:rounded focus:shadow-md focus:outline-none"
-                        >{{ sub.quote }}</textarea
+                        >{{ subf.quote }}</textarea
                       >
                       <div class="flex items-end justify-between">
                         <div class="flex items-end gap-4">
@@ -342,12 +393,12 @@
                           <input
                             [id]="'quote_' + i"
                             class="input w-20 text-base font-semibold text-detail"
-                            [(ngModel)]="sub.page"
+                            [(ngModel)]="subf.page"
                           />
                         </div>
                         <div
                           class="hover-basic flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-secondary"
-                          (click)="deleteQuote(i)"
+                          (click)="deleteSub(i)"
                           tooltip="Deletar citação"
                           color="card"
                           [border]="true"
@@ -367,13 +418,42 @@
             <!-- ### case: Films ## -->
             <!-- ################## -->
             <ng-container *ngSwitchCase="'films'">
-              <app-sub-cards *ngFor="let sub of subItems">
-                <ng-template #children>
-                  <p class="text-base text-detail">
-                    {{ (sub | as : MovieLineModel).movieLine }}
-                  </p>
-                </ng-template>
-              </app-sub-cards>
+              <ng-container *ngIf="!isEdit; else inptMovieLines">
+                <app-sub-cards *ngFor="let sub of subItems">
+                  <ng-template #children>
+                    <p class="text-base text-detail">
+                      {{ (sub | as : MovieLineModel).movieLine }}
+                    </p>
+                  </ng-template>
+                </app-sub-cards>
+              </ng-container>
+              <ng-template #inptMovieLines>
+                <app-sub-cards *ngFor="let subf of subForm; index as i">
+                  <ng-template #children>
+                    <div class="flex flex-col gap-3">
+                      <textarea
+                        [(ngModel)]="subf.movieLine"
+                        class="h-36 w-full flex-grow resize-none overflow-x-hidden p-2 text-base text-detail focus:rounded focus:shadow-md focus:outline-none"
+                        >{{ subf.movieLine }}</textarea
+                      >
+                      <div class="flex items-end justify-end">
+                        <div
+                          class="hover-basic flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-secondary"
+                          (click)="deleteSub(i)"
+                          tooltip="Deletar Fala"
+                          color="card"
+                          [border]="true"
+                        >
+                          <ng-icon
+                            class="text-base text-card"
+                            name="heroXMarkSolid"
+                          ></ng-icon>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </app-sub-cards>
+              </ng-template>
             </ng-container>
             <!-- ################### -->
             <!-- ### case: Albums ## -->
