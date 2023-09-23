@@ -459,23 +459,52 @@
             <!-- ### case: Albums ## -->
             <!-- ################### -->
             <ng-container *ngSwitchCase="'albums'">
-              <app-sub-cards
-                *ngFor="let sub of subItems.sort(sortAlbumTracks())"
-              >
-                <ng-template #children>
-                  <h1 class="text-lg font-semibold text-highlight">
-                    Faixa Nº {{ (sub | as : TrackModel).trackNumber }}
-                  </h1>
-                  <div class="flex justify-between">
-                    <span class="text-base text-detail">
-                      {{ (sub | as : TrackModel).trackName }}
-                    </span>
-                    <span class="text-base font-medium text-secondary">
-                      {{ (sub | as : TrackModel).time }}
-                    </span>
-                  </div>
-                </ng-template>
-              </app-sub-cards>
+              <ng-container *ngIf="!isEdit; else inptTracks">
+                <app-sub-cards
+                  *ngFor="let sub of subItems.sort(sortAlbumTracks())"
+                >
+                  <ng-template #children>
+                    <h1 class="text-lg font-semibold text-highlight">
+                      Faixa Nº {{ (sub | as : TrackModel).trackNumber }}
+                    </h1>
+                    <div class="flex justify-between">
+                      <span class="text-base text-detail">
+                        {{ (sub | as : TrackModel).trackName }}
+                      </span>
+                      <span class="text-base font-medium text-secondary">
+                        {{ (sub | as : TrackModel).time }}
+                      </span>
+                    </div>
+                  </ng-template>
+                </app-sub-cards>
+              </ng-container>
+              <ng-template #inptTracks>
+                <app-sub-cards *ngFor="let sub of subForm; index as i">
+                  <ng-template #children>
+                    <label
+                      [for]="'track_' + i"
+                      class="text-lg font-semibold text-highlight"
+                    >
+                      Faixa Nº
+                    </label>
+                    <input
+                      [id]="'track_' + i"
+                      class="input w-10 text-lg font-semibold text-highlight"
+                      [(ngModel)]="sub.trackNumber"
+                    />
+                    <div class="flex justify-between">
+                      <input
+                        [(ngModel)]="sub.trackName"
+                        class="input mr-6 grow text-base text-detail"
+                      />
+                      <input
+                        [(ngModel)]="sub.time"
+                        class="input text-base font-medium text-secondary"
+                      />
+                    </div>
+                  </ng-template>
+                </app-sub-cards>
+              </ng-template>
             </ng-container>
           </ng-container>
         </ng-container>

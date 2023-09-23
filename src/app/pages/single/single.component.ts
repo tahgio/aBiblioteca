@@ -102,10 +102,9 @@ export class SingleComponent implements OnInit {
             // Init Form for editing according to entry type
             // create a deep copy by value for album model
             if (this.entry === 'albums') {
-              //TODO: update this part
               this.form = {
-                albumReview: {},
                 ...el,
+                albumReview: { ...(el as AlbumModel).albumReview },
               } as AlbumModel;
             } else {
               this.form = { ...el } as FormModels;
@@ -124,7 +123,13 @@ export class SingleComponent implements OnInit {
         this.subSingle$ = this.store.loadSub(this.entry, itemId).pipe(
           map((el) => {
             this.subLength = el.length;
-            this.subForm = el.map((obj) => ({ ...obj }));
+            if (this.entry === 'albums') {
+              this.subForm = el
+                .map((obj) => ({ ...obj }))
+                .sort(this.sortAlbumTracks());
+            } else {
+              this.subForm = el.map((obj) => ({ ...obj }));
+            }
             return el;
           }),
           catchError((e: Error) => {
@@ -149,8 +154,23 @@ export class SingleComponent implements OnInit {
   onCancel(item: FormModels, subItems: SubFormModels[]) {
     // Reset form
     console.log(this.form, this.subForm);
-    this.form = { ...item };
-    this.subForm = subItems.map((obj) => ({ ...obj }));
+    // create a deep copy by value for album model
+    if (this.entry === 'albums') {
+      this.form = {
+        ...item,
+        albumReview: { ...(item as AlbumModel).albumReview },
+      } as AlbumModel;
+    } else {
+      this.form = { ...item };
+    }
+    // Do sorting for album tracks
+    if (this.entry === 'albums') {
+      this.subForm = subItems
+        .map((obj) => ({ ...obj }))
+        .sort(this.sortAlbumTracks());
+    } else {
+      this.subForm = subItems.map((obj) => ({ ...obj }));
+    }
     // Reset state
     this.isEdit = false;
   }
