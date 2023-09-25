@@ -48,6 +48,7 @@ export class SingleComponent implements OnInit {
   singleItem$!: Observable<Nullable<FormModels>>;
   subSingle$!: Observable<SubFormModels[]>;
   // -- Variables
+  itemId!: string;
   entry!: EntryType;
   appState: 'stable' | 'error' | 'loading' = 'stable';
   isEdit: boolean = false;
@@ -78,6 +79,8 @@ export class SingleComponent implements OnInit {
     if (itemId === null) {
       throw new Error('ItemId not found');
     }
+    // Save itemId for later use
+    this.itemId = itemId;
     // Get parent Url to access db
     this.route.url.pipe(first()).subscribe((segment) => {
       // Init
@@ -149,6 +152,17 @@ export class SingleComponent implements OnInit {
 
   onEdit(): void {
     this.isEdit = true;
+  }
+
+  onSubmit() {
+    try {
+      // Exit Edit mode
+      this.isEdit = false;
+      // Update Entry
+      this.store.updateEntry(this.itemId, this.entry, this.form, this.subForm);
+      // Reinit Component
+      this.ngOnInit();
+    } catch (error) {}
   }
 
   onCancel(item: FormModels, subItems: SubFormModels[]) {

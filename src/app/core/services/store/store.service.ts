@@ -17,6 +17,9 @@ import {
   serverTimestamp,
   getDoc,
   Timestamp,
+  updateDoc,
+  UpdateData,
+  setDoc,
 } from '@angular/fire/firestore';
 import {
   EntryType,
@@ -34,12 +37,13 @@ import {
 import { FormGroup } from '@angular/forms';
 import { AlbumModel, BookModel, FilmModel } from '../../types/Models';
 import { EntryType as EntryTypeEnum } from '../../types/Consts';
+import { MessageService } from '../message/message.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StoreService {
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore, private msg: MessageService) {}
 
   /*
    * Collection
@@ -86,6 +90,56 @@ export class StoreService {
           _parentTitle: objtoAdd.title,
         };
         addDoc(subInstance, subWithMetadata);
+      });
+    });
+  }
+
+  async updateEntry(
+    id: string,
+    entry: EntryType,
+    updateObj: FormModels,
+    subObj: SubFormModels[]
+  ) {
+    // Init
+    const docRef = doc(this.firestore, entry, id);
+    const objWithTimeStamp: UpdateData<FormModels> = {
+      ...updateObj,
+      _lastModified: serverTimestamp() as Timestamp,
+    };
+    try {
+      // Update Collection
+      await updateDoc(docRef, objWithTimeStamp);
+    } catch (error: any) {
+      this.msg.showToast(
+        'error',
+        'Algo de errado aconteceu ao atualizar o item'
+      );
+      throw new Error(error);
+    }
+    // Update SubCollection
+    this.getLastRandomNumber(getSubItemType(entry)).subscribe((lastRandom) => {
+      let randomCount = 0;
+      subObj.map((e, i) => {
+        let subWithMetadata: SubFormModels = { ...e };
+        if (!e?._random) {
+          subWithMetadata = {
+            ...e,
+            _random: lastRandom + randomCount + 1,
+            _parent: docRef,
+            _parentTitle: updateObj.title,
+          };
+          ++randomCount;
+        }
+
+        try {
+          setDoc(docRef, subWithMetadata);
+        } catch (error: any) {
+          this.msg.showToast(
+            'error',
+            'Algo de errado aconteceu ao atualizar o subitem'
+          );
+          throw new Error(error);
+        }
       });
     });
   }
@@ -139,7 +193,7 @@ export class StoreService {
             return collectionData(
               query(
                 collectionGroup(this.firestore, field),
-                where('_random', '==', randomNumber),
+                where('_random', '<=', randomNumber),
                 limit(1)
               )
             ).pipe(mergeAll());

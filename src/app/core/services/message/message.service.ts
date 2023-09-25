@@ -34,7 +34,7 @@ export class MessageService {
     // Hide Toast
     setTimeout(() => {
       this.hideToast();
-    }, 3000);
+    }, 5000);
   }
 
   /*

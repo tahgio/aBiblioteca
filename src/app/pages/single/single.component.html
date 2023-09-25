@@ -16,12 +16,12 @@
             [src]="item.cover"
           />
           <div
-            class="absolute bottom-3 left-3 h-fit w-fit p-px"
-            [tooltip]="isEdit ? 'Cancelar' : 'Editar item'"
-            color="card"
-            [border]="true"
+            class="absolute bottom-0 left-0 flex h-fit w-1/4 items-center justify-between p-3"
           >
             <div
+              [tooltip]="isEdit ? 'Cancelar' : 'Editar item'"
+              color="card"
+              [border]="true"
               class="hover-basic flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-secondary bg-main"
               (click)="isEdit ? onCancel(item, subItems) : onEdit()"
             >
@@ -30,6 +30,13 @@
                 [name]="isEdit ? 'heroXMarkSolid' : 'heroPencilMini'"
               ></ng-icon>
             </div>
+            <button
+              *ngIf="isEdit"
+              class="hover-basic flex h-fit w-fit items-center justify-center gap-2 rounded bg-highlight px-2 py-1 font-semibold text-card shadow-sm shadow-detail"
+              (click)="onSubmit()"
+            >
+              Confirmar
+            </button>
           </div>
         </div>
         <div class="flex w-3/4 flex-col gap-3 p-3">
@@ -356,7 +363,9 @@
       </span>
 
       <div class="flex flex-col gap-5">
-        <ng-container *ngIf="subItems.length > 0; else noSubItems">
+        <ng-container
+          *ngIf="subItems.length > 0 || subForm.length > 0; else noSubItems"
+        >
           <ng-container [ngSwitch]="entry">
             <!-- ################## -->
             <!-- ### case: Books ## -->
@@ -521,6 +530,16 @@
     message="O item especificado não foi encontrado na Biblioteca."
   >
   </not-found>
+  <div
+    id="container"
+    *ngIf="appState !== 'error'"
+    class="absolute left-1/2 top-1/2 h-52 w-52 -translate-x-1/2 -translate-y-1/2"
+  >
+    <ng-icon
+      name="heroArrowPathSolid"
+      class="animate-spin text-9xl text-secondary"
+    ></ng-icon>
+  </div>
 </ng-template>
 
 <!-- ############ -->
