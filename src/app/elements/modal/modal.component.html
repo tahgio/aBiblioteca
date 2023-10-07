@@ -1,0 +1,29 @@
+<div
+  class="fixed inset-0 z-0 h-screen w-screen overflow-y-hidden bg-detail bg-opacity-75"
+>
+  <div
+    class="absolute inset-0 z-10 m-auto flex h-fit w-1/3 flex-col items-center justify-center gap-4 rounded border border-warning bg-main bg-opacity-100 p-5 shadow-sm shadow-detail"
+  >
+    <ng-icon
+      class="text-5xl text-warning"
+      name="heroExclamationTriangle"
+    ></ng-icon>
+    <h1 class="text-xl font-medium text-detail">
+      {{ message }}
+    </h1>
+    <div class="flex h-fit w-full justify-between">
+      <button
+        class="hover-basic flex h-fit w-fit items-center justify-center gap-2 rounded border border-warning bg-card px-2 py-1 font-semibold text-warning shadow-sm shadow-detail"
+        (click)="onCancel()"
+      >
+        Cancelar
+      </button>
+      <button
+        class="hover-basic flex h-fit w-fit items-center justify-center gap-2 rounded bg-warning px-2 py-1 font-semibold text-card shadow-sm shadow-detail"
+        (click)="onConfirmClick()"
+      >
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>

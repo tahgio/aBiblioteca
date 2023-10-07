@@ -120,7 +120,7 @@ export class TooltipDirective implements OnDestroy {
     const offset = 40;
     switch (this.position) {
       case 'bottom':
-        compRef.instance.top = bottom + offset;
+        compRef.instance.top = bottom;
         compRef.instance.left = horizontalDiff / 2 + left;
         break;
       case 'top':

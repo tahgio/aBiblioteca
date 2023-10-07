@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { Observable, catchError, first, map } from 'rxjs';
 import { MessageService } from 'src/app/core/services/message/message.service';
 import { StoreService } from 'src/app/core/services/store/store.service';
@@ -67,6 +67,7 @@ export class SingleComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private store: StoreService,
     private msg: MessageService
   ) {}
@@ -249,6 +250,20 @@ export class SingleComponent implements OnInit {
         break;
       default:
         assureNever(this.entry);
+    }
+  }
+
+  onRemoveConfirm(isConfirmed: boolean) {
+    if (isConfirmed) {
+      this.store
+        .removeItem(this.entry, this.itemId)
+        .then(() => {
+          this.msg.showToast('success', 'Objeto removido com sucesso');
+          this.router.navigateByUrl('/livros');
+        })
+        .catch((err: Error) => {
+          this.msg.showToast('error', 'Algo de errado aconteceu!');
+        });
     }
   }
 

@@ -20,6 +20,7 @@ import {
   heroFilmSolid,
   heroPlusSolid,
   heroArrowPathSolid,
+  heroTrashSolid,
 } from '@ng-icons/heroicons/solid';
 import {
   heroStar,
@@ -52,6 +53,8 @@ import { ItemsComponent } from './pages/items/items.component';
 import { HeaderComponent } from './elements/header/header.component';
 import { SubCardsComponent } from './elements/sub-cards/sub-cards.component';
 import { NotFoundComponent } from './elements/not-found/not-found.component';
+import { ModalDirective } from './core/directives/modal/modal.directive';
+import { ModalComponent } from './elements/modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +75,8 @@ import { NotFoundComponent } from './elements/not-found/not-found.component';
     HeaderComponent,
     SubCardsComponent,
     NotFoundComponent,
+    ModalDirective,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -99,6 +104,7 @@ import { NotFoundComponent } from './elements/not-found/not-found.component';
       heroXMarkSolid,
       heroPlusSolid,
       heroArrowPathSolid,
+      heroTrashSolid,
     }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),

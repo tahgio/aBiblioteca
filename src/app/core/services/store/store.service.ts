@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  DocumentData,
   Firestore,
   collection,
   collectionData,
@@ -20,6 +19,7 @@ import {
   updateDoc,
   UpdateData,
   setDoc,
+  deleteDoc,
 } from '@angular/fire/firestore';
 import {
   EntryType,
@@ -241,6 +241,11 @@ export class StoreService {
         }
       })
     );
+  }
+
+  removeItem(entry: EntryType, key: string) {
+    const docRef = doc(this.firestore, entry, key);
+    return deleteDoc(docRef);
   }
 
   /*
