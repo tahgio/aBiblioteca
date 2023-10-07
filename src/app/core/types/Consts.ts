@@ -1,3 +1,6 @@
+import { Validators } from '@angular/forms';
+import { inArrayValidator } from '../validators/inArrayValidator';
+
 /*
  * ENUMS
  */
@@ -67,6 +70,12 @@ export const pathConverter = {
   albums: EntryType.albums,
 } as const;
 
+export const entryConverter = {
+  books: PathType.livros,
+  films: PathType.filmes,
+  albums: PathType.albums,
+};
+
 /*
  * CONSTANTS
  */
@@ -96,7 +105,7 @@ export const allItemsInfo = {
       'Aqui, você encontrará uma coleção cuidadosamente selecionada de livros, filmes e músicas que são muito importantes para mim. Esta biblioteca é um reflexo do meu gosto pessoal e dos meus interesses. Espero que você goste!',
   },
   films: {
-    img: '../../../assets/typewriterAndPapers.png',
+    img: '../../../assets/popcornBowl.png',
     imgAlt: 'Green typewriter with folded papers around',
     title: 'Filmes',
     subTitle:
@@ -110,3 +119,47 @@ export const allItemsInfo = {
       'Aqui, você encontrará uma coleção cuidadosamente selecionada de livros, filmes e músicas que são muito importantes para mim. Esta biblioteca é um reflexo do meu gosto pessoal e dos meus interesses. Espero que você goste!',
   },
 } as const;
+
+export const formGroups = {
+  books: {
+    title: ['', Validators.required],
+    author: ['', Validators.required],
+    genre: [''],
+    cover: ['', Validators.required],
+    year: ['', Validators.required],
+    pages: [
+      '',
+      [Validators.min(10), Validators.max(9999), Validators.required],
+    ],
+    tags: [[]],
+    status: ['', [Validators.required, inArrayValidator(bookStatusList)]],
+    rating: [1, [Validators.min(1), Validators.max(5)]],
+  },
+  films: {
+    title: ['', Validators.required],
+    director: ['', Validators.required],
+    writer: ['', Validators.required],
+    storyline: ['', Validators.required],
+    country: ['', Validators.required],
+    genre: [''],
+    cover: ['', Validators.required],
+    year: ['', Validators.required],
+    runtime: ['', [Validators.required]],
+    tags: [[]],
+    status: ['', [Validators.required, inArrayValidator(filmStatusList)]],
+    rating: [1, [Validators.min(1), Validators.max(5)]],
+  },
+  albums: {
+    title: ['', Validators.required],
+    artist: ['', Validators.required],
+    genre: [''],
+    cover: ['', Validators.required],
+    albumReview: {
+      reviewer: [''],
+      review: [''],
+    },
+    year: ['', Validators.required],
+    tags: [[]],
+    rating: [1, [Validators.min(1), Validators.max(5)]],
+  },
+};

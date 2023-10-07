@@ -37,6 +37,7 @@ module.exports = {
         fadeOut: "fadeOut 200ms ease-in forwards",
         slowFadeIn: "fadeIn 700ms ease-in forwards",
         slowFadeOut: "fadeOut 700ms ease-in forwards",
+        spinner: "spinner 1.2s cubic-bezier infinite",
       },
       keyframes: {
         fadeIn: {

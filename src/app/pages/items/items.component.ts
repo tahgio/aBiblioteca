@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, first } from 'rxjs';
+import { Observable, first, map } from 'rxjs';
 import { StoreService } from 'src/app/core/services/store/store.service';
 import { allItemsInfo } from 'src/app/core/types/Consts';
 import { convertPathToEntry, isPathType } from 'src/app/core/types/Methods';
@@ -33,7 +33,13 @@ export class ItemsComponent implements OnInit {
         // Get entry from path
         this.entry = convertPathToEntry(path);
         // Get items from entry
-        this.allItems$ = this.store.loadCollection(this.entry);
+        this.allItems$ = this.store.loadCollection(this.entry).pipe(
+          map((el) => {
+            return el.sort((a: FormModels, b: FormModels) => {
+              return a.title.localeCompare(b.title, 'pt');
+            });
+          })
+        );
       }
     });
   }

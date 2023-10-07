@@ -6,12 +6,19 @@
     <span
       *ngFor="let i of [1, 2, 3, 4, 5]"
       class="inline-block text-2xl"
-      [ngClass]="{ 'cursor-pointer': !static }"
-      (click)="!static ? mainForm.get('rating')?.setValue(i) : null"
+      [ngClass]="{ 'cursor-pointer': !static || model }"
+      (click)="
+        !static
+          ? mainForm.get('rating')?.setValue(i)
+          : model
+          ? onModelChange(i)
+          : null
+      "
     >
       <ng-icon
         [name]="
-          i <= (!static ? mainForm.get('rating')?.value : static)
+          i <=
+          (!static ? mainForm.get('rating')?.value : model ? model : static)
             ? 'heroStarSolid'
             : 'heroStar'
         "
