@@ -70,6 +70,12 @@ export const pathConverter = {
   albums: EntryType.albums,
 } as const;
 
+export const entryConverter = {
+  books: PathType.livros,
+  films: PathType.filmes,
+  albums: PathType.albums,
+};
+
 /*
  * CONSTANTS
  */

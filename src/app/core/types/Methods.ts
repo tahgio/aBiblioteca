@@ -1,5 +1,6 @@
 import {
   PathType as PathTypeEnum,
+  entryConverter,
   itemConverter,
   pathConverter,
   subItemGetter,
@@ -68,6 +69,10 @@ export function assureNever(value: never): Error {
  */
 export function convertPathToEntry(item: PathType): EntryType {
   return pathConverter[item as keyof typeof pathConverter];
+}
+
+export function convertEntryToPath(item: EntryType): PathType {
+  return entryConverter[item as keyof typeof entryConverter];
 }
 
 export function convertItemToEntry(item: ItemType): EntryType {

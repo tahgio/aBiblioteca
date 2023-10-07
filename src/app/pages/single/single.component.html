@@ -110,6 +110,21 @@
                   </select>
                 </div>
               </ng-template>
+              <ng-container *ngIf="entry === 'films'">
+                <span
+                  *ngIf="!isEdit; else inptCountry"
+                  class="font-medium text-detail"
+                >
+                  {{ (item | as : FilmModel).country }}
+                </span>
+                <ng-template #inptCountry>
+                  <input
+                    type="text"
+                    class="input w-52"
+                    [(ngModel)]="form.country"
+                  />
+                </ng-template>
+              </ng-container>
             </ng-container>
           </div>
           <!-- ############# -->

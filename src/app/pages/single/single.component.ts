@@ -28,6 +28,7 @@ import {
 import {
   EntryType,
   FormModels,
+  PathType,
   SubFormModels,
 } from 'src/app/core/types/Unions';
 
@@ -50,6 +51,7 @@ export class SingleComponent implements OnInit {
   // -- Variables
   itemId!: string;
   entry!: EntryType;
+  path!: PathType;
   appState: 'stable' | 'error' | 'loading' = 'stable';
   isEdit: boolean = false;
   addedAt!: Nullable<Date>;
@@ -85,10 +87,10 @@ export class SingleComponent implements OnInit {
     // Get parent Url to access db
     this.route.url.pipe(first()).subscribe((segment) => {
       // Init
-      const path = segment[0].path;
+      this.path = segment[0].path as PathType;
       // Check if path is a valid key
-      if (isPathType(path)) {
-        this.entry = convertPathToEntry(path);
+      if (isPathType(this.path)) {
+        this.entry = convertPathToEntry(this.path);
         this.statusList =
           this.entry === 'books'
             ? bookStatusList
@@ -259,7 +261,7 @@ export class SingleComponent implements OnInit {
         .removeItem(this.entry, this.itemId)
         .then(() => {
           this.msg.showToast('success', 'Objeto removido com sucesso');
-          this.router.navigateByUrl('/livros');
+          this.router.navigateByUrl(`/${this.path}`);
         })
         .catch((err: Error) => {
           this.msg.showToast('error', 'Algo de errado aconteceu!');

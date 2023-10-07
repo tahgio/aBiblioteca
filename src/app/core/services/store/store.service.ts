@@ -118,8 +118,10 @@ export class StoreService {
     }
     // Update SubCollection
     this.getLastRandomNumber(getSubItemType(entry)).subscribe((lastRandom) => {
+      console.log('lastRandom');
       let randomCount = 0;
       subObj.map((e, i) => {
+        console.log(e);
         let subWithMetadata: SubFormModels = { ...e };
         if (!e?._random) {
           subWithMetadata = {
